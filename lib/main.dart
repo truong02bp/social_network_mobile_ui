@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_network_mobile_ui/login/bloc/login_bloc.dart';
-import 'package:social_network_mobile_ui/login/bloc/login_state.dart';
-import 'package:social_network_mobile_ui/login/login_screen.dart';
+import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
+import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
+import 'package:social_network_mobile_ui/screens/login/login_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
-import 'package:social_network_mobile_ui/routers.dart';
 import 'constants/color.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_network_mobile_ui/login/bloc/login_event.dart';
+import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {

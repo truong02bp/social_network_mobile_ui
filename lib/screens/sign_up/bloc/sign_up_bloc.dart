@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_event.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_state.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_event.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(SignUpState());

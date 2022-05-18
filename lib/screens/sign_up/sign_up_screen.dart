@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/components/error_snack_bar.dart';
-import 'package:social_network_mobile_ui/login/bloc/login_bloc.dart';
-import 'package:social_network_mobile_ui/login/bloc/login_state.dart';
-import 'package:social_network_mobile_ui/login/login_screen.dart';
+import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
+import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
+import 'package:social_network_mobile_ui/screens/login/login_screen.dart';
 import 'package:social_network_mobile_ui/routers.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_bloc.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_event.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_state.dart';
-import 'package:social_network_mobile_ui/sign_up/components/sign_up_form.dart';
-import 'package:social_network_mobile_ui/sign_up/otp_screen.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_bloc.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_event.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_state.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/components/sign_up_form.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/otp_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   static final String routeName = '/sign-up';

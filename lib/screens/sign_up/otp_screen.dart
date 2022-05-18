@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:social_network_mobile_ui/constants/theme.dart';
-import 'package:social_network_mobile_ui/sign_up/bloc/sign_up_bloc.dart';
+import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_bloc.dart';
 
 class OtpScreen extends StatelessWidget {
   final SignUpBloc signUpBloc;

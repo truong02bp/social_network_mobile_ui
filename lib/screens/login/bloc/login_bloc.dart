@@ -3,33 +3,28 @@ import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc(LoginState initialState) : super(initialState);
   String email = '';
   String password = '';
 
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    switch (event.runtimeType) {
-      case EmailChangeEvent:
-        event as EmailChangeEvent;
-        email = event.email;
-        print(email);
-        break;
-      case PasswordChangeEvent:
-        event as PasswordChangeEvent;
-        password = event.password;
-        print(password);
-        break;
-      case SubmitEvent:
-        String message = validate(email, password);
-        if (message.isEmpty) {
-          yield LoginSuccess();
-        }
-        else {
-          yield LoginFailure(message: message);
-        }
-        break;
-    }
+  LoginBloc(LoginState initialState) : super(initialState) {
+    on<EmailChangeEvent>((event, emit) {
+      email = event.email;
+      print(email);
+    });
+
+    on<PasswordChangeEvent>((event, emit) {
+      password = event.password;
+      print(password);
+    });
+
+    on<SubmitEvent>((event, emit) {
+      String message = validate(email, password);
+      if (message.isEmpty) {
+        emit(LoginSuccess());
+      } else {
+        emit(LoginFailure(message: message));
+      }
+    });
   }
 
   String validate(String email, String password) {

@@ -3,42 +3,36 @@ import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_event.dart
 import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpState());
-
   String phone = '';
   String name = '';
   String email = '';
   String password = '';
 
-  @override
-  Stream<SignUpState> mapEventToState(SignUpEvent event) async* {
-    switch (event.runtimeType) {
-      case ChangeNameEvent:
-        event as ChangeNameEvent;
-        name = event.name;
-        break;
-      case ChangePhoneEvent:
-        event as ChangePhoneEvent;
-        phone = event.phone;
-        break;
-      case ChangeEmailEvent:
-        event as ChangeEmailEvent;
-        email = event.email;
-        break;
-      case ChangePasswordEvent:
-        event as ChangePasswordEvent;
-        password = event.password;
-        break;
-      case SubmitEvent:
-        String message = validate(email, password);
-        if (message.isEmpty) {
-          yield SignUpSuccess(email: email);
-        }
-        else {
-          yield SignUpFailure(message: message);
-        }
-        break;
-    }
+  SignUpBloc() : super(SignUpState()) {
+    on<ChangeNameEvent>((event, emit) {
+      name = event.name;
+    });
+
+    on<ChangePhoneEvent>((event, emit) {
+      phone = event.phone;
+    });
+
+    on<ChangeEmailEvent>((event, emit) {
+      email = event.email;
+    });
+
+    on<ChangePasswordEvent>((event, emit) {
+      password = event.password;
+    });
+
+    on<SubmitEvent>((event, emit) {
+      String message = validate(email, password);
+      if (message.isEmpty) {
+        emit(SignUpSuccess(email: email));
+      } else {
+        emit(SignUpFailure(message: message));
+      }
+    });
   }
 
   String validate(String email, String password) {

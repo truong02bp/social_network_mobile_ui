@@ -30,3 +30,14 @@ class ChangePasswordEvent extends SignUpEvent {
 class SubmitEvent extends SignUpEvent {
 
 }
+
+class SendOtpEvent extends SignUpEvent {
+
+}
+
+class ConfirmOtpEvent extends SignUpEvent {
+  String otp;
+
+  ConfirmOtpEvent({required this.otp});
+}
+

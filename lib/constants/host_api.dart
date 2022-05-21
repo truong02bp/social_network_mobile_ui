@@ -6,3 +6,4 @@ final minioHost = "http://$IP:60001/media";
 
 final mediaUrl = host + "/api/$version/media";
 final userUrl = host + "/api/$version/user";
+final mailUrl = host + "/api/$version/mail";

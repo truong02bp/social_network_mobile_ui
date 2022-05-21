@@ -4,6 +4,7 @@ import 'package:social_network_mobile_ui/constants/theme.dart';
 import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_event.dart';
+
 class SignUpForm extends StatelessWidget {
   const SignUpForm({Key? key}) : super(key: key);
 
@@ -36,7 +37,7 @@ class SignUpForm extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 25,
         ),
         TextFormField(
           onChanged: (value) {
@@ -67,7 +68,7 @@ class SignUpForm extends StatelessWidget {
           ],
         ),
         const SizedBox(
-          height: 15,
+          height: 25,
         ),
         TextFormField(
           onChanged: (value) {
@@ -93,7 +94,7 @@ class SignUpForm extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 25,
         ),
         TextFormField(
             obscureText: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/components/error_snack_bar.dart';
+import 'package:social_network_mobile_ui/components/loading_icon.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
 import 'package:social_network_mobile_ui/screens/login/login_screen.dart';
@@ -24,9 +25,12 @@ class SignUpScreen extends StatelessWidget {
       body: BlocListener(
         bloc: signUpBloc,
         listener: (context, state) {
-          if (state is SignUpSuccess) {
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return OtpScreen(signUpBloc, state.email);
+          if (state is OtpSent) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return OtpScreen(
+                signUpBloc: signUpBloc,
+                email: state.email,
+              );
             }));
           }
           if (state is SignUpFailure) {
@@ -60,7 +64,24 @@ class SignUpScreen extends StatelessWidget {
               ),
               SignUpForm(),
               const SizedBox(
-                height: 30,
+                height: 35,
+              ),
+              BlocBuilder(
+                  bloc: signUpBloc,
+                  builder: (context, state) {
+                    if (state is Loading) {
+                      return Container(
+                        width: double.infinity,
+                        child: LoadingIcon(
+                          height: 50,
+                          width: 50,
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
+              const SizedBox(
+                height: 25,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +107,7 @@ class SignUpScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                height: 50,
+                height: 70,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

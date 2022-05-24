@@ -99,7 +99,7 @@ class _PageableScreenState extends State<PageableScreen> {
               backgroundColor: color),
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                "assets/svgs/heart.svg",
+                "assets/svgs/person.svg",
                 width: 25,
                 height: 25,
                 color: currentIndex == 4 ? Colors.white : Colors.grey,

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_mobile_ui/components/error_snack_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_network_mobile_ui/screens/home/home_screen.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';

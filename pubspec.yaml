@@ -36,6 +36,9 @@ dependencies:
   keyboard_dismisser: ^2.0.0
   http: ^0.13.3
   shared_preferences: ^2.0.7
+  json_serializable: ^4.1.0
+  build_runner: ^2.1.1
+
 
 dev_dependencies:
   flutter_test:

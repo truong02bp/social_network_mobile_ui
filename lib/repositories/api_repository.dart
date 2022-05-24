@@ -23,8 +23,8 @@ class ApiRepository {
       return parseResponse(res: res, model: model);
     } catch (exception) {
       log("${model.url} ${exception.toString()}");
+      return null;
     }
-    return null;
   }
 
   Future<dynamic> post<T>(ApiModel<T> model) async {
@@ -40,12 +40,13 @@ class ApiRepository {
     try {
       final res = await http.post(
           Uri.parse(model.url).replace(queryParameters: model.params),
+          body: jsonEncode(model.body),
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
       log("${model.url} ${exception.toString()}");
+      return null;
     }
-    return null;
   }
 
   Future<dynamic> put<T>(ApiModel<T> model) async {
@@ -61,12 +62,13 @@ class ApiRepository {
     try {
       final res = await http.put(
           Uri.parse(model.url).replace(queryParameters: model.params),
+          body: jsonEncode(model.body),
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
       log("${model.url} ${exception.toString()}");
+      return null;
     }
-    return null;
   }
 
   Future<dynamic> delete<T>(ApiModel<T> model) async {
@@ -86,8 +88,8 @@ class ApiRepository {
       return parseResponse(res: res, model: model);
     } catch (exception) {
       log("${model.url} ${exception.toString()}");
+      return null;
     }
-    return null;
   }
 
   dynamic parseResponse({res, model}) {

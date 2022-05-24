@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_mobile_ui/components/error_snack_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/screens/home/home_screen.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
@@ -29,7 +30,12 @@ class LoginScreen extends StatelessWidget {
               ScaffoldMessenger.of(context)
                   .showSnackBar(errorSnackBar(message: state.message));
             }
-            if (state is LoginSuccess) {}
+            if (state is LoginSuccess) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return HomeScreen(user: state.user);
+              }));
+            }
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),

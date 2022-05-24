@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           brightness: isLightTheme ? Brightness.light : Brightness.dark,
           backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : AppColor.black3,
           scaffoldBackgroundColor:
-              isLightTheme ? Color(0xFFFFFFFF) : AppColor.black3,
+          isLightTheme ? Color(0xFFFFFFFF) : AppColor.black3,
         ),
         home: BlocProvider(
             create: (context) => LoginBloc(LoginState())..add(CheckLoginEvent()),

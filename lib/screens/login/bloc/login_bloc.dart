@@ -13,7 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<CheckLoginEvent>((event, emit) async {
       User? user = await userRepository.getUserLogin();
       if (user != null) {
-        emit(LoginSuccess(user: user));
+        emit(LoginSuccess());
       }
     });
 
@@ -28,10 +28,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<SubmitEvent>((event, emit) async {
       String message = validate(email, password);
       if (message.isEmpty) {
-        User? user =
-            await userRepository.login(email: email, password: password);
+        String? user = await userRepository.login(email: email, password: password);
         if (user != null) {
-          emit(LoginSuccess(user: user));
+          emit(LoginSuccess());
         } else {
           emit(LoginFailure(message: message));
         }

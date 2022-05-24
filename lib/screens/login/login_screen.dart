@@ -7,6 +7,7 @@ import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
 import 'package:social_network_mobile_ui/screens/login/components/form_login.dart';
+import 'package:social_network_mobile_ui/screens/pageable_screen/pageable_screen.dart';
 import 'package:social_network_mobile_ui/screens/sign_up/bloc/sign_up_bloc.dart';
 import 'package:social_network_mobile_ui/screens/sign_up/sign_up_screen.dart';
 import 'package:social_network_mobile_ui/size_config.dart';
@@ -33,7 +34,7 @@ class LoginScreen extends StatelessWidget {
             if (state is LoginSuccess) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) {
-                return HomeScreen(user: state.user);
+                return PageableScreen();
               }));
             }
           },

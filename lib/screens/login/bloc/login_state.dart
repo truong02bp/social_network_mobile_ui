@@ -12,7 +12,5 @@ class LoginFailure extends LoginState {
 }
 
 class LoginSuccess extends LoginState {
-    User user;
 
-    LoginSuccess({required this.user});
 }

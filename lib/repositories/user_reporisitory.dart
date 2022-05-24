@@ -13,15 +13,14 @@ class UserRepository {
     return _instance;
   }
 
-  Future<User?> login({required String email, required String password}) async {
+  Future<String?> login({required String email, required String password}) async {
     ApiModel model = ApiModel(
         url: authenticateUrl,
         body: AuthenticationRequest(email: email, password: password));
     String token = await apiRepository.post(model);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", token);
-    User? user = await getUserLogin();
-    return user;
+    return token;
   }
 
   Future<User?> getUserLogin() async {

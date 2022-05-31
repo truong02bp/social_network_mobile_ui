@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_mobile_ui/components/error_snack_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

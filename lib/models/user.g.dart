@@ -13,10 +13,11 @@ User _$UserFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     phone: json['phone'] as String,
     address: json['address'] as String?,
-    online: json['online'] as bool,
-    lateOnline: json['lateOnline'] == null
+    isOnline: json['isOnline'] as bool,
+    isPrivate: json['isPrivate'] as bool,
+    lastOnline: json['lastOnline'] == null
         ? null
-        : DateTime.parse(json['lateOnline'] as String),
+        : DateTime.parse(json['lastOnline'] as String),
     avatar: Media.fromJson(json['avatar'] as Map<String, dynamic>),
   );
 }
@@ -27,7 +28,8 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'name': instance.name,
       'phone': instance.phone,
       'address': instance.address,
-      'online': instance.online,
-      'lateOnline': instance.lateOnline?.toIso8601String(),
+      'isOnline': instance.isOnline,
+      'isPrivate': instance.isPrivate,
+      'lastOnline': instance.lastOnline?.toIso8601String(),
       'avatar': instance.avatar,
     };

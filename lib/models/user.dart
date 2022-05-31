@@ -3,16 +3,18 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class User {
   int id;
   String email;
   String name;
   String phone;
   String? address;
-  bool online;
-  DateTime? lateOnline;
+  bool isOnline;
+  bool isPrivate;
+  DateTime? lastOnline;
   Media avatar;
+
 
   User(
       {required this.id,
@@ -20,8 +22,9 @@ class User {
       required this.name,
       required this.phone,
       this.address,
-      required this.online,
-      this.lateOnline,
+      required this.isOnline,
+      required this.isPrivate,
+      this.lastOnline,
       required this.avatar});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -13,6 +13,7 @@ class ApiRepository {
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString("token");
+    print(token);
     if (token != null) {
       model.headers!['Authorization'] = token;
     }

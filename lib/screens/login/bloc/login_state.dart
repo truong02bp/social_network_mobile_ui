@@ -1,5 +1,4 @@
 
-import 'package:social_network_mobile_ui/models/user.dart';
 
 class LoginState {
 

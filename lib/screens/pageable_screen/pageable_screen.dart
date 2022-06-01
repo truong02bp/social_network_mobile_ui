@@ -4,11 +4,11 @@ import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/screens/home/bloc/home_bloc.dart';
 import 'package:social_network_mobile_ui/screens/home/home_screen.dart';
 import 'package:social_network_mobile_ui/screens/notification/notification_screen.dart';
-import 'package:social_network_mobile_ui/screens/personal/personal_screen.dart';
+import 'package:social_network_mobile_ui/screens/profile/profile_screen.dart';
 import 'package:social_network_mobile_ui/screens/search/bloc/search_bloc.dart';
 import 'package:social_network_mobile_ui/screens/video_network/bloc/video_network_bloc.dart';
 import 'package:social_network_mobile_ui/screens/notification/bloc/notification_bloc.dart';
-import 'package:social_network_mobile_ui/screens/personal/bloc/personal_bloc.dart';
+import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/search/search_screen.dart';
 import 'package:social_network_mobile_ui/screens/video_network/video_network_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,10 +38,7 @@ class _PageableScreenState extends State<PageableScreen> {
       create: (context) => NotificationBloc(),
       child: NotificationScreen(),
     ),
-    BlocProvider(
-      create: (context) => PersonalBloc(),
-      child: PersonalScreen(),
-    ),
+    ProfileScreen(),
   ];
   int currentIndex = 0;
 

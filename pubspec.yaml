@@ -39,6 +39,7 @@ dependencies:
   json_serializable: ^4.1.0
   build_runner: ^2.1.1
   flutter_svg: ^0.22.0
+  cached_network_image: ^3.0.0
 
 
 dev_dependencies:

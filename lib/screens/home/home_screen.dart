@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_mobile_ui/components/loading_icon.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/home/bloc/home_bloc.dart';
+import 'package:social_network_mobile_ui/screens/messenger/messenger_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -63,13 +64,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           width: 25,
                         ),
-                        Container(
-                            height: 20,
-                            width: 20,
-                            child: SvgPicture.asset(
-                              "assets/svgs/message.svg",
-                              color: Colors.white,
-                            )),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return MessengerScreen(user!);
+                            }));
+                          },
+                          child: Container(
+                              height: 25,
+                              width: 25,
+                              child: SvgPicture.asset(
+                                "assets/svgs/message.svg",
+                                color: Colors.white,
+                              )),
+                        ),
                       ],
                     ),
                     Text('${user!.name}')

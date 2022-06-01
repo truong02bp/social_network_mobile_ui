@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primarySwatch: isLightTheme ? Colors.grey : Colors.grey,
-          primaryColor: isLightTheme ? Colors.white : AppColor.black3,
+          primaryColor: isLightTheme ? Colors.white : Colors.white,
           brightness: isLightTheme ? Brightness.light : Brightness.dark,
           backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : AppColor.black3,
           scaffoldBackgroundColor:

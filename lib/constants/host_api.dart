@@ -1,5 +1,5 @@
 
-const IP = "192.168.0.102";
+const IP = "192.168.0.105";
 const version = "v1";
 final host = "http://$IP:8080";
 final minioHost = "http://$IP:9000/media";

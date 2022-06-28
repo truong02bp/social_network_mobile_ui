@@ -11,4 +11,5 @@ class AuthenticationRequest {
   factory AuthenticationRequest.fromJson(Map<String, dynamic> json) => _$AuthenticationRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthenticationRequestToJson(this);
+
 }

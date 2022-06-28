@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/routers.dart';
+import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 
 class ProfileDrawer extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<ProfileBloc>(context);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Expanded(
         child: DrawerHeader(
@@ -49,7 +53,10 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   icon: Icon(Icons.logout,
                       color: Color(0xfff78379).withOpacity(0.8)),
                   title: 'Log out',
-                  onTap: () {}),
+                  onTap: () {
+                      bloc.add(ProfileLogout());
+                      pushReplacementLoginScreen(context: context);
+                  }),
             ])),
       )
     ]);

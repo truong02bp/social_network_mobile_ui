@@ -6,3 +6,7 @@ abstract class ProfileEvent {}
 class ProfileInitialEvent extends ProfileEvent {
 
 }
+
+class ProfileLogout extends ProfileEvent {
+
+}

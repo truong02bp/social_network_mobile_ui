@@ -31,5 +31,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'isOnline': instance.isOnline,
       'isPrivate': instance.isPrivate,
       'lastOnline': instance.lastOnline?.toIso8601String(),
-      'avatar': instance.avatar,
+      'avatar': instance.avatar.toJson(),
     };

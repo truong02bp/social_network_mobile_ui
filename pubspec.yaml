@@ -40,6 +40,9 @@ dependencies:
   build_runner: ^2.1.1
   flutter_svg: ^0.22.0
   cached_network_image: ^3.0.0
+  camera: ^0.9.2+1
+  image_picker: ^0.8.3+3
+  image_cropper: ^2.0.3
 
 
 dev_dependencies:

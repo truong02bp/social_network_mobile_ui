@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/api_model.dart';
 import 'package:social_network_mobile_ui/models/dto/authentication_request.dart';
+import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/profile_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/repositories/api_repository.dart';
@@ -32,6 +35,17 @@ class UserRepository {
           return User.fromJson(json);
         });
     User? user = await apiRepository.get(model);
+    return user;
+  }
+
+  Future<User?> updateAvatar({required MediaDto mediaDto}) async {
+    ApiModel model = ApiModel(
+        url: userUrl + "/update-avatar",
+        body: mediaDto,
+        parse: (json) {
+          return User.fromJson(json);
+        });
+    User? user = await apiRepository.put(model);
     return user;
   }
 

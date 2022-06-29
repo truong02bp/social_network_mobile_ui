@@ -17,3 +17,9 @@ class GetProfileSuccess extends ProfileState {
 
     GetProfileSuccess({required this.profileDto});
 }
+
+class ProfileUpdateAvatarSuccess extends ProfileState {
+    final User user;
+
+    ProfileUpdateAvatarSuccess({required this.user});
+}

@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/profile_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/repositories/user_reporisitory.dart';
@@ -30,6 +31,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileLogout>((event, emit) async {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.clear();
+    });
+
+    on<ProfileUpdateAvatar>((event, emit) async {
+      MediaDto mediaDto = new MediaDto(name: event.name, bytes: event.bytes,
+          userId: event.userId);
+      User? user = await userRepository.updateAvatar(mediaDto: mediaDto);
+      if (user != null) {
+          emit(ProfileUpdateAvatarSuccess(user: user));
+      }
     });
   }
 }

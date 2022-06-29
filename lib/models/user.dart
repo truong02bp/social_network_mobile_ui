@@ -8,6 +8,7 @@ class User {
   int id;
   String email;
   String name;
+  String username;
   String phone;
   String? address;
   bool isOnline;
@@ -20,6 +21,7 @@ class User {
       {required this.id,
       required this.email,
       required this.name,
+      required this.username,
       required this.phone,
       this.address,
       required this.isOnline,

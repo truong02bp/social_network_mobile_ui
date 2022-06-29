@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
+import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
+import 'package:social_network_mobile_ui/screens/gallery/gallery_screen.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 
 class Profile extends StatelessWidget {
 
   User? user;
-  final ImagePicker _picker = ImagePicker();
   late ProfileBloc bloc;
   Profile({required this.user});
 
@@ -36,7 +37,9 @@ class Profile extends StatelessWidget {
                 }
                 return GestureDetector(
                   onTap: (){
-                    getFromSource(ImageSource.gallery);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Gallery(type: GalleryConstants.image, option: GalleryConstants.single, callBackSingle: (selectedFile){
+                      processFile(file: selectedFile);
+                    },)));
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(35),
@@ -106,38 +109,29 @@ class Profile extends StatelessWidget {
     );
   }
 
-  void getFromSource(ImageSource source) async {
-    XFile? file;
-    if (source == ImageSource.gallery) {
-      file = await _picker.pickImage(source: source);
-    }
-    if (source == ImageSource.camera) {
-      file = await _picker.pickImage(source: source);
-    }
-    if (file != null) {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: file!.path,
-        compressFormat: ImageCompressFormat.jpg,
-        compressQuality: 100,
-        cropStyle: CropStyle.circle,
-        uiSettings: [AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: AppColor.black,
-            backgroundColor: AppColor.black,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            showCropGrid: false,
-            lockAspectRatio: false),]
-      );
-      if (croppedFile != null) {
-        List<int> bytes = List.from(await croppedFile.readAsBytes());
-        int? id = user?.id;
-        print(id);
-        if (id != null) {
-          bloc.add(ProfileUpdateAvatar(userId: id, bytes: base64Encode(bytes),
-              name: croppedFile.path.substring(
-                  croppedFile.path.lastIndexOf("/") + 1)));
-        }
+  void processFile({required File file}) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: file.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      cropStyle: CropStyle.circle,
+      uiSettings: [AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: AppColor.black,
+          backgroundColor: AppColor.black,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          showCropGrid: false,
+          lockAspectRatio: false),]
+    );
+    if (croppedFile != null) {
+      List<int> bytes = List.from(await croppedFile.readAsBytes());
+      int? id = user?.id;
+      print(id);
+      if (id != null) {
+        bloc.add(ProfileUpdateAvatar(userId: id, bytes: base64Encode(bytes),
+            name: croppedFile.path.substring(
+                croppedFile.path.lastIndexOf("/") + 1)));
       }
     }
   }

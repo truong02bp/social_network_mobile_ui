@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
           width: 30,
         ),
         Text(
-          '${user?.name}',
+          '${user?.username}',
           style: TextStyle(fontSize: 18),
         ),
         Spacer(),

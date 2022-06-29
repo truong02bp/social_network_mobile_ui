@@ -1,13 +1,12 @@
-import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/api_model.dart';
 import 'package:social_network_mobile_ui/models/dto/authentication_request.dart';
 import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/profile_dto.dart';
+import 'package:social_network_mobile_ui/models/dto/user_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/repositories/api_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
   static final UserRepository _instance = UserRepository();
@@ -40,8 +39,28 @@ class UserRepository {
 
   Future<User?> updateAvatar({required MediaDto mediaDto}) async {
     ApiModel model = ApiModel(
-        url: userUrl + "/update-avatar",
+        url: userUrl + "/avatar",
         body: mediaDto,
+        parse: (json) {
+          return User.fromJson(json);
+        });
+    User? user = await apiRepository.put(model);
+    return user;
+  }
+
+  Future<String?> update({required User user}) async {
+    ApiModel model = ApiModel(
+      url: userUrl,
+      body: user,
+    );
+    String message = await apiRepository.put(model);
+    return message;
+  }
+
+  Future<User?> updatePassword({required UserDto userDto}) async {
+    ApiModel model = ApiModel(
+        url: userUrl + "/password",
+        body: userDto,
         parse: (json) {
           return User.fromJson(json);
         });

@@ -37,7 +37,7 @@ class Profile extends StatelessWidget {
                 }
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Gallery(type: GalleryConstants.image, option: GalleryConstants.single, callBackSingle: (selectedFile){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryScreen(type: GalleryConstants.image, option: GalleryConstants.single, callBackSingle: (selectedFile){
                       processFile(file: selectedFile);
                     },)));
                   },

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/avatar.dart';
+import 'package:social_network_mobile_ui/screens/profile/follow_screen.dart';
 
 class Profile extends StatelessWidget {
   User? user;
@@ -55,29 +56,49 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Column(
-                          children: [
-                            Text('$followers'),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'Followers',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FollowScreen(user: user!)));
+                          },
+                          child: Column(
+                            children: [
+                              Text('$followers'),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Followers',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
                         ),
-                        Column(
-                          children: [
-                            Text('$following'),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'Following',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FollowScreen(
+                                          user: user!,
+                                          initialIndex: 1,
+                                        )));
+                          },
+                          child: Column(
+                            children: [
+                              Text('$following'),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Following',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     );

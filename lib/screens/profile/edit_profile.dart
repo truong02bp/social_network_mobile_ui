@@ -47,7 +47,6 @@ class EditProfile extends StatelessWidget {
                   ).show();
                 }
                 if (state is ProfileUpdateFailure) {
-                  print('aaaa');
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.ERROR,

@@ -61,7 +61,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (user != null) {
         emit(ProfileUpdatePasswordSuccess(user: user));
       } else {
-        print('bbb');
         emit(ProfileUpdateFailure());
       }
     });

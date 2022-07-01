@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:social_network_mobile_ui/models/dto/follow_relation_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/profile_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/user_dto.dart';
@@ -65,25 +64,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ProfileUpdatePasswordSuccess(user: user));
       } else {
         emit(ProfileUpdateFailure());
-      }
-    });
-
-    on<ProfileGetFollowers>((event, emit) async {
-      emit(ProfileLoading());
-      List<FollowRelationDto> followRelations =
-          await followRepository.getFollowers(
-              userId: event.userId,
-              username: event.username,
-              page: event.page,
-              size: event.size);
-      emit(ProfileGetFollowerSuccess(followRelations: followRelations));
-    });
-
-    on<ProfileCountFollowRequest>((event, emit) async {
-      final total =
-          await followRepository.countFollowRequest(userId: event.userId);
-      if (total != null) {
-        emit(ProfileCountFollowRequestSuccess(totalRequest: total));
       }
     });
   }

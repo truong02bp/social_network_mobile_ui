@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_bloc.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_state.dart';
 import 'package:social_network_mobile_ui/screens/login/login_screen.dart';
-import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+
 import 'constants/color.dart';
 
 void main() {
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
           isLightTheme ? Color(0xFFFFFFFF) : AppColor.black3,
         ),
         home: BlocProvider(
-            create: (context) => LoginBloc(LoginState())..add(CheckLoginEvent()),
+            create: (context) =>
+            LoginBloc(LoginState())
+              ..add(CheckLoginEvent()),
             child: LoginScreen()),
       ),
     );

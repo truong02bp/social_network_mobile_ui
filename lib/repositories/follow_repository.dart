@@ -41,4 +41,13 @@ class FollowRepository {
     int total = int.parse(await apiRepository.get(model));
     return total;
   }
+
+  Future<String?> deleteFollowRelation(
+      {required int userId, required int followerId}) async {
+    final model = ApiModel(
+        url: followUrl,
+        params: {"userId": "$userId", "followerId": "$followerId"});
+    String? message = await apiRepository.delete(model);
+    return message;
+  }
 }

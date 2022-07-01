@@ -35,17 +35,3 @@ class ProfileUpdatePasswordSuccess extends ProfileState {
 }
 
 class ProfileUpdateFailure extends ProfileState {}
-
-class ProfileGetFollowerSuccess extends ProfileState {
-  final List<FollowRelationDto> followRelations;
-
-  ProfileGetFollowerSuccess({required this.followRelations});
-}
-
-class ProfileLoading extends ProfileState {}
-
-class ProfileCountFollowRequestSuccess extends ProfileState {
-  final int totalRequest;
-
-  ProfileCountFollowRequestSuccess({required this.totalRequest});
-}

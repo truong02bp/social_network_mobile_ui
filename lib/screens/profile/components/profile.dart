@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
+import 'package:social_network_mobile_ui/screens/follower/follower_screen.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/avatar.dart';
-import 'package:social_network_mobile_ui/screens/profile/follow_screen.dart';
 
 class Profile extends StatelessWidget {
   User? user;
@@ -62,7 +62,7 @@ class Profile extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        FollowScreen(user: user!)));
+                                        FollowerScreen(user: user!)));
                           },
                           child: Column(
                             children: [
@@ -79,12 +79,12 @@ class Profile extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FollowScreen(
-                                          user: user!,
-                                        )));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => FollowerScreen(
+                            //               user: user!,
+                            //             )));
                           },
                           child: Column(
                             children: [

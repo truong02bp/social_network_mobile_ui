@@ -32,3 +32,16 @@ class ProfileUpdatePassword extends ProfileEvent {
       required this.oldPassword,
       required this.newPassword});
 }
+
+class ProfileGetFollowers extends ProfileEvent {
+  final int userId;
+  final int page;
+  final int size;
+  final String username;
+
+  ProfileGetFollowers(
+      {required this.userId,
+      required this.page,
+      required this.size,
+      this.username = ''});
+}

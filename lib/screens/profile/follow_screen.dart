@@ -1,123 +1,210 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
+import 'package:social_network_mobile_ui/constants/host_api.dart';
+import 'package:social_network_mobile_ui/models/dto/follow_relation_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/profile_drawer.dart';
 
 class FollowScreen extends StatelessWidget {
   final User user;
-  int initialIndex;
   late ProfileBloc bloc;
+  ScrollController _followerScrollController =
+      ScrollController(keepScrollOffset: true);
+  int page = 0;
+  int size = 20;
+  List<FollowRelationDto> followers = [];
+  String usernameSearch = '';
 
-  FollowScreen({required this.user, this.initialIndex = 0});
+  FollowScreen({required this.user});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc()..add(ProfileInitialEvent()),
+      create: (context) => ProfileBloc()
+        ..add(ProfileGetFollowers(userId: user.id, page: page, size: size)),
       child: Builder(builder: (context) => _buildView(context)),
     );
   }
 
   Widget _buildView(BuildContext context) {
     bloc = BlocProvider.of<ProfileBloc>(context);
+    _followerScrollController.addListener(() {
+      if (_followerScrollController.position.pixels ==
+          _followerScrollController.position.maxScrollExtent) {
+        bloc.add(ProfileGetFollowers(
+            userId: user.id,
+            page: page + 1,
+            size: size,
+            username: usernameSearch));
+        page += 1;
+      }
+    });
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColor.black,
-        title: Row(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-            Text(
-              '${user.username}',
-              style: TextStyle(fontSize: 18),
-            ),
-            Spacer(),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        backgroundColor: AppColor.black,
-        child: ProfileDrawer(),
-      ),
-      body: DefaultTabController(
-        length: 2,
-        initialIndex: initialIndex,
-        child: Scaffold(
-          appBar: TabBar(
-            tabs: [
-              _buildTabFollowers(),
-              _buildTabFollowing(),
-            ],
-          ),
-          body: TabBarView(
+        appBar: AppBar(
+          backgroundColor: AppColor.black,
+          title: Row(
             children: [
-              _buildViewFollowers(context),
-              _buildViewFollowing(context),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                width: 30,
+              ),
+              Text(
+                '${user.username}',
+                style: TextStyle(fontSize: 18),
+              ),
+              Spacer(),
             ],
           ),
         ),
-      ),
-    );
+        endDrawer: Drawer(
+          backgroundColor: AppColor.black,
+          child: ProfileDrawer(),
+        ),
+        body: _buildViewFollowers(context));
   }
 
   Widget _buildViewFollowers(BuildContext context) {
-    return Text('AAA');
-  }
-
-  Widget _buildViewFollowing(BuildContext context) {
-    return Text('BBB');
-  }
-
-  Widget _buildTabFollowers() {
-    return Tab(
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        bloc: bloc,
-        buildWhen: (previous, current) => current is GetProfileSuccess,
-        builder: (context, state) {
-          int followers = 0;
-          if (state is GetProfileSuccess) {
-            followers = state.profileDto.followers;
-          }
-          return Text(
-            '$followers followers',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.5,
-                fontWeight: FontWeight.w800),
-          );
-        },
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.black26,
+            ),
+            child: TextFormField(
+              onChanged: (value) {
+                usernameSearch = value;
+                page = 0;
+                followers.clear();
+                print('change');
+                print("aaa ${followers.length}");
+                bloc.add(ProfileGetFollowers(
+                    userId: user.id,
+                    page: page,
+                    size: size,
+                    username: usernameSearch));
+              },
+              decoration: InputDecoration(
+                  hintText: "Search",
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.deepOrangeAccent,
+                  )),
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            'All followers',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          BlocBuilder(
+            bloc: bloc,
+            buildWhen: (previous, current) =>
+                current is ProfileLoading ||
+                current is ProfileGetFollowerSuccess,
+            builder: (context, state) {
+              print(state);
+              if (state is ProfileLoading) {
+                return Flexible(
+                  flex: 2,
+                  child: Container(
+                    height: 75,
+                    width: 75,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/loading.gif"),
+                            fit: BoxFit.cover)),
+                  ),
+                );
+              }
+              return Container();
+            },
+          ),
+          BlocBuilder<ProfileBloc, ProfileState>(
+            bloc: bloc,
+            builder: (context, state) {
+              if (state is ProfileGetFollowerSuccess) {
+                followers.addAll(state.followRelations);
+              }
+              return Expanded(
+                  child: ListView.builder(
+                      controller: _followerScrollController,
+                      itemCount: followers.length,
+                      addAutomaticKeepAlives: false,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        print(followers.length);
+                        final follower = followers[index];
+                        return ListTile(
+                          key: ValueKey(follower.user.id),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(22),
+                            child: CachedNetworkImage(
+                              height: 45,
+                              width: 45,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) {
+                                return Image.asset('assets/images/loading.gif');
+                              },
+                              imageUrl: minioHost + follower.user.avatar.url,
+                            ),
+                          ),
+                          title: Row(
+                            children: [
+                              Text('${follower.user.username}'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              follower.isFollowing == true
+                                  ? Container()
+                                  : Text(
+                                      '• Follow',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                              Spacer(),
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.5))),
+                                child: Text(
+                                  'Remove',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }));
+            },
+          ),
+        ],
       ),
     );
-  }
-
-  Widget _buildTabFollowing() {
-    return Tab(
-        child: BlocBuilder<ProfileBloc, ProfileState>(
-      bloc: bloc,
-      buildWhen: (previous, current) => current is GetProfileSuccess,
-      builder: (context, state) {
-        int following = 0;
-        if (state is GetProfileSuccess) {
-          following = state.profileDto.following;
-        }
-        return Text(
-          '$following following',
-          style: TextStyle(
-              color: Colors.white, fontSize: 15.5, fontWeight: FontWeight.w800),
-        );
-      },
-    ));
   }
 }

@@ -1,7 +1,7 @@
 part of 'profile_bloc.dart';
 
-@immutable
-abstract class ProfileState {}
+class ProfileState {
+}
 
 class ProfileInitial extends ProfileState {}
 
@@ -36,3 +36,11 @@ class ProfileUpdatePasswordSuccess extends ProfileState {
 }
 
 class ProfileUpdateFailure extends ProfileState {}
+
+class ProfileGetFollowerSuccess extends ProfileState {
+  final List<FollowRelationDto> followRelations;
+
+  ProfileGetFollowerSuccess({required this.followRelations});
+}
+
+class ProfileLoading extends ProfileState {}

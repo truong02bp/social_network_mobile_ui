@@ -84,7 +84,6 @@ class Profile extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => FollowScreen(
                                           user: user!,
-                                          initialIndex: 1,
                                         )));
                           },
                           child: Column(

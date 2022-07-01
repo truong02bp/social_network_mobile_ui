@@ -45,6 +45,7 @@ dependencies:
   image_cropper: ^2.0.3
   photo_manager: ^2.1.4
   awesome_dialog: ^2.2.1
+  equatable: ^2.0.3
 
 dev_dependencies:
   flutter_test:

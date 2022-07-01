@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_network_mobile_ui/models/dto/follow_relation_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/profile_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/user_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
+import 'package:social_network_mobile_ui/repositories/follow_repository.dart';
 import 'package:social_network_mobile_ui/repositories/user_reporisitory.dart';
 
 part 'profile_event.dart';
@@ -12,8 +14,15 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   UserRepository userRepository = UserRepository.getInstance();
+  FollowRepository followRepository = FollowRepository.getInstance();
 
   ProfileBloc() : super(ProfileInitial()) {
+    // _onInitialEvent();
+    // _onUpdateAvatarEvent();
+    // _onLogoutEvent();
+    // _onUpdateUserEvent();
+    // _onUpdatePasswordEvent();
+    // _onGetFollowerEvent();
     on<ProfileInitialEvent>((event, emit) async {
       User? user = await userRepository.getUserLogin();
       if (user != null) {
@@ -26,12 +35,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
 
-    on<ProfileLogout>((event, emit) async {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.clear();
-    });
-
     on<ProfileUpdateAvatar>((event, emit) async {
       MediaDto mediaDto = new MediaDto(
           name: event.name, bytes: event.bytes, userId: event.userId);
@@ -41,6 +44,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else {
         emit(ProfileUpdateFailure());
       }
+    });
+
+    on<ProfileLogout>((event, emit) async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.clear();
     });
 
     on<ProfileUpdateUser>((event, emit) async {
@@ -64,5 +73,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ProfileUpdateFailure());
       }
     });
+
+    on<ProfileGetFollowers>((event, emit) async {
+      emit(ProfileLoading());
+      List<FollowRelationDto> followRelations =
+          await followRepository.getFollowers(
+              userId: event.userId,
+              username: event.username,
+              page: event.page,
+              size: event.size);
+      emit(ProfileGetFollowerSuccess(followRelations: followRelations));
+    });
   }
+
+  _onInitialEvent() {}
+
+  _onUpdateAvatarEvent() {}
+
+  _onLogoutEvent() {}
+
+  _onUpdateUserEvent() {}
+
+  _onUpdatePasswordEvent() {}
+
+  _onGetFollowerEvent() {}
 }

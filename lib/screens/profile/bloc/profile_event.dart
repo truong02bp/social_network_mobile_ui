@@ -45,3 +45,9 @@ class ProfileGetFollowers extends ProfileEvent {
       required this.size,
       this.username = ''});
 }
+
+class ProfileCountFollowRequest extends ProfileEvent {
+  final int userId;
+
+  ProfileCountFollowRequest({required this.userId});
+}

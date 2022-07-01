@@ -6,5 +6,6 @@ final minioHost = "http://$IP:9000/media";
 final mediaUrl = host + "/api/$version/media";
 final userUrl = host + "/api/$version/user";
 final followUrl = host + "/api/$version/follow-relation";
+final followRequestUrl = host + "/api/$version/follow-request";
 final mailUrl = host + "/api/$version/mail";
 final authenticateUrl = host + "/api/$version/authenticate";

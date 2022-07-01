@@ -78,5 +78,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               size: event.size);
       emit(ProfileGetFollowerSuccess(followRelations: followRelations));
     });
+
+    on<ProfileCountFollowRequest>((event, emit) async {
+      final total =
+          await followRepository.countFollowRequest(userId: event.userId);
+      if (total != null) {
+        emit(ProfileCountFollowRequestSuccess(totalRequest: total));
+      }
+    });
   }
 }

@@ -105,7 +105,6 @@ class OtpScreen extends StatelessWidget {
                           color: Colors.red),
                       child: InkWell(
                         onTap: () {
-                          print(numbers);
                           String otp =
                               numbers[0] + numbers[1] + numbers[2] + numbers[3];
                           signUpBloc.add(ConfirmOtpEvent(otp: otp));

@@ -34,4 +34,11 @@ class FollowRepository {
     followRelations.addAll(await apiRepository.get(model));
     return followRelations;
   }
+
+  Future<int?> countFollowRequest({required int userId}) async {
+    final model = ApiModel(
+        url: followRequestUrl + "/count", params: {"userId": "$userId"});
+    int total = int.parse(await apiRepository.get(model));
+    return total;
+  }
 }

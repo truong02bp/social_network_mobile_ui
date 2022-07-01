@@ -52,7 +52,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<ConfirmOtpEvent>((event, emit) {
       if (event.otp == otp) {
         emit(Loading());
-        print("success");
       } else {
         emit(OtpWrong());
       }

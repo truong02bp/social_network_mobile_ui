@@ -24,7 +24,8 @@ class FollowScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc()
-        ..add(ProfileGetFollowers(userId: user.id, page: page, size: size)),
+        ..add(ProfileGetFollowers(userId: user.id, page: page, size: size))
+        ..add(ProfileCountFollowRequest(userId: user.id)),
       child: Builder(builder: (context) => _buildView(context)),
     );
   }
@@ -92,8 +93,6 @@ class FollowScreen extends StatelessWidget {
                   usernameSearch = value;
                   page = 0;
                   followers.clear();
-                  print('change');
-                  print("aaa ${followers.length}");
                   bloc.add(ProfileGetFollowers(
                       userId: user.id,
                       page: page,
@@ -114,7 +113,80 @@ class FollowScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 15,
+            height: 20,
+          ),
+          InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(10),
+            child: Row(
+              children: [
+                Stack(children: [
+                  CircleAvatar(
+                    radius: 25,
+                    child: Image.asset(
+                      "assets/images/anonymous.png",
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                      right: 0,
+                      height: 20,
+                      width: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: BlocBuilder<ProfileBloc, ProfileState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              current is ProfileCountFollowRequestSuccess,
+                          builder: (context, state) {
+                            int total = 0;
+                            if (state is ProfileCountFollowRequestSuccess) {
+                              total = state.totalRequest;
+                            }
+                            if (total > 99) {
+                              return Center(child: Text('99✚'));
+                            }
+                            return Center(child: Text('$total'));
+                          },
+                        ),
+                      )),
+                ]),
+                SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Follow requests',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Approve or ignore requests')
+                  ],
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+              width: 0.2,
+              color: Colors.grey.withOpacity(0.5),
+            ))),
+          ),
+          SizedBox(
+            height: 20,
           ),
           Text(
             'All followers',
@@ -129,7 +201,6 @@ class FollowScreen extends StatelessWidget {
                 current is ProfileLoading ||
                 current is ProfileGetFollowerSuccess,
             builder: (context, state) {
-              print(state);
               if (state is ProfileLoading) {
                 return Center(
                   child: Container(
@@ -147,6 +218,8 @@ class FollowScreen extends StatelessWidget {
           ),
           BlocBuilder<ProfileBloc, ProfileState>(
             bloc: bloc,
+            buildWhen: (previous, current) =>
+                current is ProfileGetFollowerSuccess,
             builder: (context, state) {
               if (state is ProfileGetFollowerSuccess) {
                 followers.addAll(state.followRelations);
@@ -158,7 +231,6 @@ class FollowScreen extends StatelessWidget {
                       addAutomaticKeepAlives: false,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        print(followers.length);
                         final follower = followers[index];
                         return ListTile(
                           key: ValueKey(follower.user.id),

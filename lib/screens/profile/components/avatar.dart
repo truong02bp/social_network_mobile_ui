@@ -78,7 +78,6 @@ class Avatar extends StatelessWidget {
     if (croppedFile != null) {
       List<int> bytes = List.from(await croppedFile.readAsBytes());
       int? id = user?.id;
-      print(id);
       if (id != null) {
         bloc.add(ProfileUpdateAvatar(
             userId: id,

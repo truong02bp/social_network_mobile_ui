@@ -1,7 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'dart:developer';
+
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_network_mobile_ui/models/api_model.dart';
 
@@ -13,7 +14,6 @@ class ApiRepository {
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString("token");
-    print(token);
     if (token != null) {
       model.headers!['Authorization'] = token;
     }

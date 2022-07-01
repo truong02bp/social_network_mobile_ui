@@ -1,7 +1,6 @@
 part of 'profile_bloc.dart';
 
-class ProfileState {
-}
+class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
 
@@ -44,3 +43,9 @@ class ProfileGetFollowerSuccess extends ProfileState {
 }
 
 class ProfileLoading extends ProfileState {}
+
+class ProfileCountFollowRequestSuccess extends ProfileState {
+  final int totalRequest;
+
+  ProfileCountFollowRequestSuccess({required this.totalRequest});
+}

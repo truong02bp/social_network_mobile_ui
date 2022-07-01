@@ -88,16 +88,18 @@ class FollowScreen extends StatelessWidget {
             ),
             child: TextFormField(
               onChanged: (value) {
-                usernameSearch = value;
-                page = 0;
-                followers.clear();
-                print('change');
-                print("aaa ${followers.length}");
-                bloc.add(ProfileGetFollowers(
-                    userId: user.id,
-                    page: page,
-                    size: size,
-                    username: usernameSearch));
+                if (value != usernameSearch) {
+                  usernameSearch = value;
+                  page = 0;
+                  followers.clear();
+                  print('change');
+                  print("aaa ${followers.length}");
+                  bloc.add(ProfileGetFollowers(
+                      userId: user.id,
+                      page: page,
+                      size: size,
+                      username: usernameSearch));
+                }
               },
               decoration: InputDecoration(
                   hintText: "Search",
@@ -129,8 +131,7 @@ class FollowScreen extends StatelessWidget {
             builder: (context, state) {
               print(state);
               if (state is ProfileLoading) {
-                return Flexible(
-                  flex: 2,
+                return Center(
                   child: Container(
                     height: 75,
                     width: 75,

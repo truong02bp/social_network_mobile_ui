@@ -17,12 +17,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   FollowRepository followRepository = FollowRepository.getInstance();
 
   ProfileBloc() : super(ProfileInitial()) {
-    // _onInitialEvent();
-    // _onUpdateAvatarEvent();
-    // _onLogoutEvent();
-    // _onUpdateUserEvent();
-    // _onUpdatePasswordEvent();
-    // _onGetFollowerEvent();
     on<ProfileInitialEvent>((event, emit) async {
       User? user = await userRepository.getUserLogin();
       if (user != null) {
@@ -85,16 +79,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(ProfileGetFollowerSuccess(followRelations: followRelations));
     });
   }
-
-  _onInitialEvent() {}
-
-  _onUpdateAvatarEvent() {}
-
-  _onLogoutEvent() {}
-
-  _onUpdateUserEvent() {}
-
-  _onUpdatePasswordEvent() {}
-
-  _onGetFollowerEvent() {}
 }

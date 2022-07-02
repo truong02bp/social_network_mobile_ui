@@ -5,7 +5,6 @@ import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/avatar.dart';
-import 'package:social_network_mobile_ui/screens/profile/profile_screen.dart';
 
 class EditProfile extends StatelessWidget {
   final User user;
@@ -28,8 +27,7 @@ class EditProfile extends StatelessWidget {
       appBar: AppBar(
         leading: InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back)),
         backgroundColor: AppColor.black3,

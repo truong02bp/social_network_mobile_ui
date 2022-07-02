@@ -15,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('rebuild B');
     return BlocProvider(
       create: (context) => ProfileBloc()..add(ProfileInitialEvent()),
       child: Builder(
@@ -25,6 +26,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildView(BuildContext context) {
     final bloc = BlocProvider.of<ProfileBloc>(context);
+    print('rebuild A');
     return BlocBuilder(
         bloc: bloc,
         buildWhen: (previous, current) {

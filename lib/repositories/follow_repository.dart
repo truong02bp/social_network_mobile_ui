@@ -35,6 +35,30 @@ class FollowRepository {
     return followRelations;
   }
 
+  Future<List<FollowRelationDto>> getFollowing(
+      {required int userId,
+      required String username,
+      required int page,
+      required int size}) async {
+    List<FollowRelationDto> followRelations = [];
+    final model = ApiModel(
+        url: followUrl + "/following",
+        params: {
+          "userId": "$userId",
+          "page": "$page",
+          "size": "$size",
+          "username": "$username"
+        },
+        parse: (data) {
+          return data
+              .map<FollowRelationDto>(
+                  (json) => FollowRelationDto.fromJson(json))
+              .toList();
+        });
+    followRelations.addAll(await apiRepository.get(model));
+    return followRelations;
+  }
+
   Future<int?> countFollowRequest({required int userId}) async {
     final model = ApiModel(
         url: followRequestUrl + "/count", params: {"userId": "$userId"});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/follower/follower_screen.dart';
+import 'package:social_network_mobile_ui/screens/following/following_screen.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/avatar.dart';
 
@@ -62,7 +63,8 @@ class Profile extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        FollowerScreen(user: user!)));
+                                        FollowerScreen(user: user!))).then(
+                                (value) => bloc.add(ProfileInitialEvent()));
                           },
                           child: Column(
                             children: [
@@ -79,12 +81,13 @@ class Profile extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => FollowerScreen(
-                            //               user: user!,
-                            //             )));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FollowingScreen(
+                                          user: user!,
+                                        ))).then(
+                                (value) => bloc.add(ProfileInitialEvent()));
                           },
                           child: Column(
                             children: [

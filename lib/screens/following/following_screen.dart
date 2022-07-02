@@ -6,38 +6,38 @@ import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/dto/follow_relation_dto.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
-import 'package:social_network_mobile_ui/screens/follower/bloc/follower_bloc.dart';
-import 'package:social_network_mobile_ui/screens/follower/components/follow_request.dart';
+import 'package:social_network_mobile_ui/screens/following/bloc/following_bloc.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/profile_drawer.dart';
 
-class FollowerScreen extends StatelessWidget {
+class FollowingScreen extends StatelessWidget {
   final User user;
-  late FollowerBloc bloc;
-  ScrollController _followerScrollController =
-      ScrollController(keepScrollOffset: true);
+  late FollowingBloc bloc;
+  ScrollController _scrollController = ScrollController(keepScrollOffset: true);
   int page = 0;
   int size = 20;
-  List<FollowRelationDto> followers = [];
+  List<FollowRelationDto> following = [];
   String usernameSearch = '';
 
-  FollowerScreen({required this.user});
+  FollowingScreen({required this.user});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FollowerBloc()
-        ..add(GetFollowers(userId: user.id, page: page, size: size))
-        ..add(CountFollowRequest(userId: user.id)),
-      child: Builder(builder: (context) => _buildView(context)),
+      create: (context) => FollowingBloc()
+        ..add(GetFollowing(
+            page: page, size: size, userId: user.id, username: usernameSearch)),
+      child: Builder(
+        builder: (context) => _buildView(context),
+      ),
     );
   }
 
   Widget _buildView(BuildContext context) {
-    bloc = BlocProvider.of<FollowerBloc>(context);
-    _followerScrollController.addListener(() {
-      if (_followerScrollController.position.pixels ==
-          _followerScrollController.position.maxScrollExtent) {
-        bloc.add(GetFollowers(
+    bloc = BlocProvider.of<FollowingBloc>(context);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        bloc.add(GetFollowing(
             userId: user.id,
             page: page + 1,
             size: size,
@@ -74,10 +74,10 @@ class FollowerScreen extends StatelessWidget {
           backgroundColor: AppColor.black,
           child: ProfileDrawer(),
         ),
-        body: _buildViewFollowers(context));
+        body: _buildViewFollowing(context));
   }
 
-  Widget _buildViewFollowers(BuildContext context) {
+  Widget _buildViewFollowing(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 12),
       child: Column(
@@ -94,8 +94,8 @@ class FollowerScreen extends StatelessWidget {
                 if (value != usernameSearch) {
                   usernameSearch = value;
                   page = 0;
-                  followers.clear();
-                  bloc.add(GetFollowers(
+                  following.clear();
+                  bloc.add(GetFollowing(
                       userId: user.id,
                       page: page,
                       size: size,
@@ -117,10 +117,6 @@ class FollowerScreen extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          FollowRequest(),
-          const SizedBox(
-            height: 20,
-          ),
           Container(
             decoration: BoxDecoration(
                 border: Border(
@@ -133,7 +129,7 @@ class FollowerScreen extends StatelessWidget {
             height: 20,
           ),
           Text(
-            'All followers',
+            'All following',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           SizedBox(
@@ -142,9 +138,9 @@ class FollowerScreen extends StatelessWidget {
           BlocBuilder(
             bloc: bloc,
             buildWhen: (previous, current) =>
-                current is FollowerLoading || current is GetFollowerSuccess,
+                current is FollowingLoading || current is GetFollowingSuccess,
             builder: (context, state) {
-              if (state is FollowerLoading) {
+              if (state is FollowingLoading) {
                 return Center(
                   child: Container(
                     height: 75,
@@ -159,29 +155,28 @@ class FollowerScreen extends StatelessWidget {
               return Container();
             },
           ),
-          BlocBuilder<FollowerBloc, FollowerState>(
+          BlocBuilder<FollowingBloc, FollowingState>(
             bloc: bloc,
             buildWhen: (previous, current) =>
-                current is GetFollowerSuccess ||
-                current is RemoveFollowerSuccess,
+                current is GetFollowingSuccess || current is UnfollowSuccess,
             builder: (context, state) {
-              if (state is GetFollowerSuccess) {
-                followers.addAll(state.followRelations);
+              if (state is GetFollowingSuccess) {
+                following.addAll(state.followRelations);
               }
-              if (state is RemoveFollowerSuccess) {
-                followers.remove(state.followRelationDto);
+              if (state is UnfollowSuccess) {
+                following.remove(state.followRelationDto);
               }
               return Expanded(
                   child: ListView.builder(
-                      controller: _followerScrollController,
-                      itemCount: followers.length,
+                      controller: _scrollController,
+                      itemCount: following.length,
                       addAutomaticKeepAlives: false,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        final follower = followers[index];
+                        final item = following[index];
                         return ListTile(
-                          key: ValueKey(follower.user.id),
-                          subtitle: Text('${follower.user.name}'),
+                          key: ValueKey(item.user.id),
+                          subtitle: Text('${item.user.name}'),
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(22),
                             child: CachedNetworkImage(
@@ -191,24 +186,18 @@ class FollowerScreen extends StatelessWidget {
                               placeholder: (context, url) {
                                 return Image.asset('assets/images/loading.gif');
                               },
-                              imageUrl: minioHost + follower.user.avatar.url,
+                              imageUrl: minioHost + item.user.avatar.url,
                             ),
                           ),
                           title: Row(
                             children: [
                               Text(
-                                '${follower.user.username}',
+                                '${item.user.username}',
                                 style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                               SizedBox(
                                 width: 10,
                               ),
-                              follower.isFollowing == true
-                                  ? Container()
-                                  : Text(
-                                      '• Follow',
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
                               Spacer(),
                               InkWell(
                                 onTap: () {
@@ -217,11 +206,11 @@ class FollowerScreen extends StatelessWidget {
                                       animType: AnimType.SCALE,
                                       dialogType: DialogType.INFO,
                                       title:
-                                          'Are you sure to remove this follower?',
+                                          'Are you sure to unfollow this person?',
                                       btnOkOnPress: () {
-                                        bloc.add(RemoveFollower(
+                                        bloc.add(UnfollowEvent(
                                             userId: user.id,
-                                            followRelationDto: follower));
+                                            followRelationDto: item));
                                       },
                                       btnOkText: 'Confirm',
                                       btnCancelOnPress: () {})
@@ -235,7 +224,7 @@ class FollowerScreen extends StatelessWidget {
                                       border: Border.all(
                                           color: Colors.grey.withOpacity(0.5))),
                                   child: Text(
-                                    'Remove',
+                                    'Following',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 14),

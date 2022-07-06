@@ -5,7 +5,6 @@ import 'package:social_network_mobile_ui/components/back_icon.dart';
 import '../../../models/user.dart';
 
 class Header extends StatelessWidget {
-
   final User user;
 
   Header({required this.user});
@@ -15,8 +14,13 @@ class Header extends StatelessWidget {
     return Row(
       children: [
         BackIcon(),
-        const SizedBox(width: 25,),
-        Text('${user.name}', style: TextStyle(fontSize: 18),),
+        const SizedBox(
+          width: 25,
+        ),
+        Text(
+          '${user.username}',
+          style: TextStyle(fontSize: 18),
+        ),
         Spacer(),
         Container(
             height: 20,

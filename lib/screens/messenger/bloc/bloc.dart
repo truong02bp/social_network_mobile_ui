@@ -5,11 +5,12 @@ import 'state.dart';
 
 class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   MessengerBloc() : super(MessengerState()) {
-    on<GetConversationEvent>(_getConversation);
+    _onGetConversationEvent();
   }
 
-  void _getConversation(
-      GetConversationEvent event, Emitter<MessengerState> emit) async {
-
+  void _onGetConversationEvent() async {
+    on<GetConversationEvent>((event, emit) =>
+    {
+    });
   }
 }

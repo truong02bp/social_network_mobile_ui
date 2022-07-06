@@ -1,6 +1,7 @@
-const IP = "192.168.0.105";
+const IP = "192.168.0.100";
 const version = "v1";
 final host = "http://$IP:8080";
+final messengerHost = "http://$IP:8081";
 final minioHost = "http://$IP:9000/media";
 
 final mediaUrl = host + "/api/$version/media";

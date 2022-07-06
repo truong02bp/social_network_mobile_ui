@@ -26,7 +26,6 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildView(BuildContext context) {
     final bloc = BlocProvider.of<ProfileBloc>(context);
-    print('rebuild A');
     return BlocBuilder(
         bloc: bloc,
         buildWhen: (previous, current) {

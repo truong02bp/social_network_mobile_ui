@@ -1,4 +1,4 @@
-const IP = "192.168.0.100";
+const IP = "192.168.70.61";
 const version = "v1";
 final host = "http://$IP:8080";
 final messengerHost = "http://$IP:8081";
@@ -10,3 +10,6 @@ final followUrl = host + "/api/$version/follow-relation";
 final followRequestUrl = host + "/api/$version/follow-request";
 final mailUrl = host + "/api/$version/mail";
 final authenticateUrl = host + "/api/$version/authenticate";
+
+// messenger service
+final conversationUrl = messengerHost + "/api/$version/conversation";

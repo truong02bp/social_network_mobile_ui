@@ -4,6 +4,7 @@ import 'package:social_network_mobile_ui/constants/content_type.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
+import 'package:social_network_mobile_ui/screens/conversation/conversation_screen.dart';
 
 import '../../../constants/host_api.dart';
 
@@ -30,7 +31,13 @@ class ConversationCard extends StatelessWidget {
             imageUrl: minioHost + user.avatar.url,
           ),
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ConversationScreen(conversation: conversation)));
+        },
         title: Text(
           '${user.name}',
           style: TextStyle(fontSize: 17),

@@ -4,6 +4,7 @@ import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/components/header.dart';
 import 'package:social_network_mobile_ui/screens/conversation/components/mesage_form.dart';
+import 'package:social_network_mobile_ui/screens/conversation/components/message_list.dart';
 
 class ConversationScreen extends StatelessWidget {
   final Conversation conversation;
@@ -26,7 +27,7 @@ class ConversationScreen extends StatelessWidget {
           child: Column(
             children: [
               Header(conversation: conversation),
-              Spacer(),
+              Expanded(child: MessageList()),
               MessageForm(conversation: conversation)
             ],
           ),

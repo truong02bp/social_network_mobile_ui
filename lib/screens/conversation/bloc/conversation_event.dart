@@ -14,3 +14,12 @@ class ConversationTypingEvent extends ConversationEvent {
 
   ConversationTypingEvent({required this.isTyping});
 }
+
+class SendTextMessageEvent extends ConversationEvent {
+  final String content;
+
+  SendTextMessageEvent({required this.content});
+}
+
+class GetMessageEvent extends ConversationEvent {
+}

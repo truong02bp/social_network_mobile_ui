@@ -15,6 +15,7 @@ class MessengerState {
     state.conversations = this.conversations;
     state.page = this.page;
     state.limit = this.limit;
+    state.user = this.user;
     return state;
   }
 }

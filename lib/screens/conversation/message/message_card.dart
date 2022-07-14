@@ -10,8 +10,15 @@ import 'package:social_network_mobile_ui/screens/conversation/message/components
 class MessageCard extends StatelessWidget {
   Message message;
   Conversation conversation;
+  bool showDate;
+  bool showAvatar;
 
-  MessageCard({required this.message, required this.conversation});
+  MessageCard({
+    required this.message,
+    required this.conversation,
+    required this.showDate,
+    required this.showAvatar,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,33 +37,36 @@ class MessageCard extends StatelessWidget {
         if (state.message == null) return CircularProgressIndicator();
         bool isSender = state.isSender;
         final messenger = message.sender;
-        return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          TimeBar(time: message.createdDate),
-          Row(
-            mainAxisAlignment:
-                isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              !isSender
-                  ? Container(
-                      margin: EdgeInsets.only(right: 5),
-                      child: Avatar(
-                        url: messenger.user.avatar.url,
-                        size: 35,
-                      ))
-                  : Container(
-                      height: 35,
-                      width: 40,
-                    ),
-              Stack(children: [
-                TextCard(
-                  text: message.content,
-                  color: state.color,
-                ),
-              ]),
-            ],
-          ),
-        ]);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 7),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            showDate ? TimeBar(time: message.createdDate) : Container(),
+            Row(
+              mainAxisAlignment:
+                  isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                !isSender && showAvatar
+                    ? Container(
+                        margin: EdgeInsets.only(right: 5),
+                        child: Avatar(
+                          url: messenger.user.avatar.url,
+                          size: 35,
+                        ))
+                    : Container(
+                        height: 35,
+                        width: 40,
+                      ),
+                Stack(children: [
+                  TextCard(
+                    text: message.content,
+                    color: state.color,
+                  ),
+                ]),
+              ],
+            ),
+          ]),
+        );
       },
     );
   }

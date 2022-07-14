@@ -31,7 +31,41 @@ class MessageList extends StatelessWidget {
             reverse: true,
             itemBuilder: (context, index) {
               final message = state.messages[index];
-              return MessageCard(message: message, conversation: conversation!);
+              // calculate show date
+              bool showDate = false;
+              if (index == state.messages.length - 1)
+                showDate = true;
+              else {
+                int minute = message.createdDate
+                    .difference(state.messages[index + 1].createdDate)
+                    .inMinutes;
+                if (minute > 5) showDate = true;
+              }
+              // calculate show avatar
+              bool showAvatar = false;
+              if (conversation!.user.id != message.sender.id) {
+                if (index == 0) {
+                  showAvatar = true;
+                } else {
+                  if (state.messages[index - 1].sender.id ==
+                      message.sender.id) {
+                    int minute = state.messages[index - 1].createdDate
+                        .difference(message.createdDate)
+                        .inMinutes;
+                    if (minute > 5) {
+                      showAvatar = true;
+                    }
+                  } else {
+                    showAvatar = true;
+                  }
+                }
+              }
+              return MessageCard(
+                message: message,
+                conversation: conversation,
+                showDate: showDate,
+                showAvatar: showAvatar,
+              );
             });
       },
     );

@@ -5,12 +5,11 @@ import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/repositories/conversation_repository.dart';
 
 part 'messenger_event.dart';
-
 part 'messenger_state.dart';
 
 class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   final ConversationRepository conversationRepository =
-  ConversationRepository.getInstance();
+      ConversationRepository.getInstance();
 
   MessengerBloc() : super(MessengerState()) {
     _onInitialEvent();
@@ -30,12 +29,15 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   _onGetConversationEvent() {
     on<GetConversationEvent>((event, emit) async {
       int userId = state.user!.id;
+      print(userId);
       List<Conversation> conversations =
-      await conversationRepository.getConversation(
-          userId: userId, page: state.page, limit: state.limit);
-      state.conversations.addAll(conversations);
-      state.page++;
-      emit(state.clone(MessengerStatus.getConversationSuccess));
+          await conversationRepository.getConversation(
+              userId: userId, page: state.page, limit: state.limit);
+      if (conversations.isNotEmpty) {
+        state.conversations.addAll(conversations);
+        state.page++;
+        emit(state.clone(MessengerStatus.getConversationSuccess));
+      }
     });
   }
 }

@@ -16,36 +16,33 @@ class ConversationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User user = conversation.guests[0].user;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: CachedNetworkImage(
-            height: 60,
-            width: 60,
-            fit: BoxFit.cover,
-            placeholder: (context, url) {
-              return Image.asset('assets/images/loading.gif');
-            },
-            imageUrl: minioHost + user.avatar.url,
-          ),
+    return ListTile(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: CachedNetworkImage(
+          height: 60,
+          width: 60,
+          fit: BoxFit.cover,
+          placeholder: (context, url) {
+            return Image.asset('assets/images/loading.gif');
+          },
+          imageUrl: minioHost + user.avatar.url,
         ),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ConversationScreen(conversation: conversation)));
-        },
-        title: Text(
-          '${user.name}',
-          style: TextStyle(fontSize: 17),
-        ),
-        subtitle: Text(
-          solveLastMessage(message: conversation.lastMessage),
-          style: TextStyle(fontSize: 15.5),
-        ),
+      ),
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ConversationScreen(conversation: conversation)));
+      },
+      title: Text(
+        '${user.name}',
+        style: TextStyle(fontSize: 17),
+      ),
+      subtitle: Text(
+        solveLastMessage(message: conversation.lastMessage),
+        style: TextStyle(fontSize: 15.5),
       ),
     );
   }

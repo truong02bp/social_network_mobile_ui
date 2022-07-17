@@ -25,14 +25,32 @@ class Conversations extends StatelessWidget {
           child: BlocBuilder<MessengerBloc, MessengerState>(
             bloc: bloc,
             buildWhen: (previous, current) =>
-                current.status == MessengerStatus.getConversationSuccess,
+                current.status == MessengerStatus.getConversationSuccess ||
+                current.status == MessengerStatus.receiveMessage,
             builder: (context, state) {
+              print(state.status);
               return ListView.builder(
                   controller: _scrollController,
                   itemCount: state.conversations.length,
+                  addAutomaticKeepAlives: false,
+                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final conversation = state.conversations[index];
-                    return ConversationCard(conversation: conversation);
+                    if (state.conversationUpdated != null &&
+                        state.status == MessengerStatus.receiveMessage) {
+                      if (conversation.id == state.conversationUpdated!.id) {
+                        return Padding(
+                          key: UniqueKey(),
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: ConversationCard(conversation: conversation),
+                        );
+                      }
+                    }
+                    return Padding(
+                      key: ValueKey(conversation.id),
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: ConversationCard(conversation: conversation),
+                    );
                   });
             },
           ),

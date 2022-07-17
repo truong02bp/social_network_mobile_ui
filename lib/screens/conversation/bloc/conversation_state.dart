@@ -6,7 +6,8 @@ enum ConversationStatus {
   getMessageSuccess,
   sendMessageSuccess,
   sendMessageFailure,
-  loading
+  loading,
+  receiveMessage
 }
 
 class ConversationState {

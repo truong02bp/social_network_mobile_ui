@@ -9,8 +9,10 @@ class MessageInteraction {
   int id;
   Messenger seenBy;
   Reaction? reaction;
+  DateTime createdDate;
 
-  MessageInteraction({required this.id, required this.seenBy, this.reaction});
+  MessageInteraction(
+      {required this.id, required this.seenBy, this.reaction, required this.createdDate});
 
   factory MessageInteraction.fromJson(Map<String, dynamic> json) =>
       _$MessageInteractionFromJson(json);

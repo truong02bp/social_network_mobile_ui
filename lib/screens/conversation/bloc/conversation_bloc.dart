@@ -25,6 +25,14 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     _onTypingEvent();
     _onSendTextMessageEvent();
     _onGetMessageEvent();
+    _onReceiveMessageEvent();
+  }
+
+  _onReceiveMessageEvent() {
+    on<ReceiveMessageEvent>((event, emit) {
+      state.messages.insert(0, event.message);
+      emit(state.clone(status: ConversationStatus.receiveMessage));
+    });
   }
 
   _onGetMessageEvent() {
@@ -43,14 +51,12 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   _onSendTextMessageEvent() {
     on<SendTextMessageEvent>((event, emit) async {
       int messengerId = state.conversation!.user.id;
-      print(messengerId);
       MessageDto textMessage = MessageDto(
           content: event.content,
           messengerId: messengerId,
           type: MessageType.TEXT);
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString("token");
-      print(token);
       _stompClient!.send(
           destination: "/social-network/message/send",
           body: jsonEncode(textMessage),
@@ -68,11 +74,11 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         config: StompConfig(
             url: 'ws://$IP:$port/ws-social-network',
             onConnect: (StompFrame frame) {
-              print('connect success');
               _stompClient!.subscribe(
                   destination: '/topic/${conversation.id}',
                   callback: (StompFrame frame) {
-                    print(jsonDecode(frame.body!));
+                    Message message = Message.fromJson(jsonDecode(frame.body!));
+                    add(ReceiveMessageEvent(message: message));
                   });
             },
             stompConnectHeaders: {'Authorization': '$token'},

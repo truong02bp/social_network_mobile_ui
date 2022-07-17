@@ -19,7 +19,8 @@ class MessageList extends StatelessWidget {
     return BlocBuilder<ConversationBloc, ConversationState>(
       bloc: bloc,
       buildWhen: (previous, current) =>
-          current.status == ConversationStatus.getMessageSuccess,
+          current.status == ConversationStatus.getMessageSuccess ||
+          current.status == ConversationStatus.receiveMessage,
       builder: (context, state) {
         final conversation = state.conversation;
         return ListView.builder(
@@ -60,11 +61,15 @@ class MessageList extends StatelessWidget {
                   }
                 }
               }
-              return MessageCard(
-                message: message,
-                conversation: conversation,
-                showDate: showDate,
-                showAvatar: showAvatar,
+              return Padding(
+                key: UniqueKey(),
+                padding: const EdgeInsets.only(bottom: 7),
+                child: MessageCard(
+                  message: message,
+                  conversation: conversation,
+                  showDate: showDate,
+                  showAvatar: showAvatar,
+                ),
               );
             });
       },

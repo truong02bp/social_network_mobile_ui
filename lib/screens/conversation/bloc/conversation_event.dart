@@ -21,5 +21,10 @@ class SendTextMessageEvent extends ConversationEvent {
   SendTextMessageEvent({required this.content});
 }
 
-class GetMessageEvent extends ConversationEvent {
+class ReceiveMessageEvent extends ConversationEvent {
+  final Message message;
+
+  ReceiveMessageEvent({required this.message});
 }
+
+class GetMessageEvent extends ConversationEvent {}

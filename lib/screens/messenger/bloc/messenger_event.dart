@@ -10,3 +10,9 @@ class MessengerInitialEvent extends MessengerEvent {
 }
 
 class GetConversationEvent extends MessengerEvent {}
+
+class ReceiveMessageEvent extends MessengerEvent {
+  final Message message;
+
+  ReceiveMessageEvent({required this.message});
+}

@@ -13,6 +13,7 @@ MessageInteraction _$MessageInteractionFromJson(Map<String, dynamic> json) {
     reaction: json['reaction'] == null
         ? null
         : Reaction.fromJson(json['reaction'] as Map<String, dynamic>),
+    createdDate: DateTime.parse(json['createdDate'] as String),
   );
 }
 
@@ -21,4 +22,5 @@ Map<String, dynamic> _$MessageInteractionToJson(MessageInteraction instance) =>
       'id': instance.id,
       'seenBy': instance.seenBy.toJson(),
       'reaction': instance.reaction?.toJson(),
+      'createdDate': instance.createdDate.toIso8601String(),
     };

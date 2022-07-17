@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/components/avatar.dart';
 import 'package:social_network_mobile_ui/components/time_bar.dart';
+import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
-import 'package:social_network_mobile_ui/screens/conversation/message/bloc/message_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/text_card.dart';
 
-class MessageCard extends StatelessWidget {
+class MessageCard extends StatefulWidget {
   Message message;
   Conversation conversation;
   bool showDate;
@@ -21,53 +20,65 @@ class MessageCard extends StatelessWidget {
   });
 
   @override
+  State<MessageCard> createState() => _MessageCardState();
+}
+
+class _MessageCardState extends State<MessageCard> {
+  bool showDetail = false;
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => MessageBloc()
-          ..add(MessageInitialEvent(
-              conversation: conversation, message: message)),
-        child: Builder(builder: (context) => _buildView(context)));
+    return Builder(builder: (context) => _buildView(context));
   }
 
   Widget _buildView(BuildContext context) {
-    final bloc = BlocProvider.of<MessageBloc>(context);
-    return BlocBuilder<MessageBloc, MessageState>(
-      bloc: bloc,
-      builder: (context, state) {
-        if (state.message == null) return CircularProgressIndicator();
-        bool isSender = state.isSender;
-        final messenger = message.sender;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 7),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            showDate ? TimeBar(time: message.createdDate) : Container(),
-            Row(
-              mainAxisAlignment:
-                  isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                !isSender && showAvatar
-                    ? Container(
-                        margin: EdgeInsets.only(right: 5),
-                        child: Avatar(
-                          url: messenger.user.avatar.url,
-                          size: 35,
-                        ))
-                    : Container(
-                        height: 35,
-                        width: 40,
-                      ),
-                Stack(children: [
-                  TextCard(
-                    text: message.content,
-                    color: state.color,
-                  ),
-                ]),
-              ],
-            ),
-          ]),
-        );
-      },
-    );
+    bool isSender = widget.message.sender.id == widget.conversation.user.id;
+    final messenger = widget.message.sender;
+    print(showDetail);
+    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      widget.showDate || showDetail
+          ? TimeBar(time: widget.message.createdDate)
+          : Container(),
+      Row(
+        mainAxisAlignment:
+            isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          !isSender && widget.showAvatar
+              ? Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: Avatar(
+                    url: messenger.user.avatar.url,
+                    size: 35,
+                  ))
+              : Container(
+                  height: 35,
+                  width: 40,
+                ),
+          InkWell(
+            borderRadius: BorderRadius.circular(15),
+            onTap: () {
+              setState(() {
+                showDetail = !showDetail;
+              });
+            },
+            onLongPress: () {},
+            child: Stack(children: [
+              TextCard(
+                text: widget.message.content,
+                color: getColor(widget.conversation.color),
+              ),
+            ]),
+          ),
+
+          // showDetail
+          //     ? SeenInfo(
+          //         isSender: isSender,
+          //         interaction: widget.message.messageInteractions,
+          //       )
+          //     : Container()
+        ],
+      ),
+    ]);
   }
 }

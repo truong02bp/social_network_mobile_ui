@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/repositories/user_reporisitory.dart';
 import 'package:social_network_mobile_ui/screens/login/bloc/login_event.dart';
+
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -28,9 +30,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<SubmitEvent>((event, emit) async {
       String message = validate(email, password);
       if (message.isEmpty) {
-        String? token = await userRepository.login(email: email, password: password);
+        String? token =
+            await userRepository.login(email: email, password: password);
         User? user = await userRepository.getUserLogin();
         if (user != null) {
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setInt("userId", user.id);
           emit(LoginSuccess());
         } else {
           emit(LoginFailure(message: message));

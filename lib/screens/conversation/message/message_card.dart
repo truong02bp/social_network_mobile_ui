@@ -4,6 +4,7 @@ import 'package:social_network_mobile_ui/components/time_bar.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_bar.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/text_card.dart';
 
 class MessageCard extends StatefulWidget {
@@ -34,7 +35,6 @@ class _MessageCardState extends State<MessageCard> {
   Widget _buildView(BuildContext context) {
     bool isSender = widget.message.sender.id == widget.conversation.user.id;
     final messenger = widget.message.sender;
-    print(showDetail);
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       widget.showDate || showDetail
           ? TimeBar(time: widget.message.createdDate)
@@ -62,7 +62,9 @@ class _MessageCardState extends State<MessageCard> {
                 showDetail = !showDetail;
               });
             },
-            onLongPress: () {},
+            onLongPress: () {
+              showReactionBar();
+            },
             child: Stack(children: [
               TextCard(
                 text: widget.message.content,
@@ -80,5 +82,18 @@ class _MessageCardState extends State<MessageCard> {
         ],
       ),
     ]);
+  }
+
+  void showReactionBar() {
+    showDialog(
+        builder: (context) => Hero(
+              tag: 'dash',
+              child: ReactionBar(
+                callBack: (value) {
+                  print(value);
+                },
+              ),
+            ),
+        context: context);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
+import 'package:social_network_mobile_ui/screens/common_screen/bloc/common_bloc.dart';
 import 'package:social_network_mobile_ui/screens/home/bloc/home_bloc.dart';
 import 'package:social_network_mobile_ui/screens/home/home_screen.dart';
 import 'package:social_network_mobile_ui/screens/notification/bloc/notification_bloc.dart';
@@ -12,14 +13,15 @@ import 'package:social_network_mobile_ui/screens/search/search_screen.dart';
 import 'package:social_network_mobile_ui/screens/video_network/bloc/video_network_bloc.dart';
 import 'package:social_network_mobile_ui/screens/video_network/video_network_screen.dart';
 
-class PageableScreen extends StatefulWidget {
-  const PageableScreen({Key? key}) : super(key: key);
+class CommonScreen extends StatefulWidget {
+  const CommonScreen({Key? key}) : super(key: key);
 
   @override
-  State<PageableScreen> createState() => _PageableScreenState();
+  State<CommonScreen> createState() => _CommonScreenState();
 }
 
-class _PageableScreenState extends State<PageableScreen> {
+class _CommonScreenState extends State<CommonScreen>
+    with WidgetsBindingObserver {
   List screens = [
     BlocProvider(
       create: (context) => HomeBloc()..add(FetchDataHomeEvent()),
@@ -40,6 +42,22 @@ class _PageableScreenState extends State<PageableScreen> {
     ProfileScreen(),
   ];
   int currentIndex = 0;
+  late CommonBloc _commonBloc;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _commonBloc = BlocProvider.of<CommonBloc>(context);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _commonBloc.add(UpdateOnlineEvent());
+    } else
+      _commonBloc.add(UpdateOfflineEvent(isLogout: false));
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-const IP = "192.168.2.18";
+const IP = "192.168.70.73";
 const version = "v1";
 final port = 8080;
 final host = "http://$IP:$port";

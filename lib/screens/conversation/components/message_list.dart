@@ -63,7 +63,7 @@ class MessageList extends StatelessWidget {
               }
               return Padding(
                 key: UniqueKey(),
-                padding: const EdgeInsets.only(bottom: 7),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: MessageCard(
                   message: message,
                   conversation: conversation,

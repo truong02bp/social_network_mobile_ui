@@ -37,9 +37,7 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
       _stompClient = StompClient(
         config: StompConfig(
             url: 'ws://$IP:$port/ws-social-network',
-            onConnect: (StompFrame frame) {
-              print('connect success');
-            },
+            onConnect: (StompFrame frame) {},
             stompConnectHeaders: {'Authorization': '$token'},
             onWebSocketError: (dynamic error) => print(error.toString())),
       );

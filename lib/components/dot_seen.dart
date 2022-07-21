@@ -8,7 +8,7 @@ class DotSeen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      radius: 8,
+      radius: 7,
       backgroundImage: NetworkImage(url),
     );
   }

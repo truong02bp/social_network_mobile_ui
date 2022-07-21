@@ -8,12 +8,13 @@ enum MessageType { TEXT, IMAGE, VIDEO }
   explicitToJson: true,
 )
 class MessageDto {
-  final String content;
+  final String? content;
   final int messengerId;
-  final MessageType type;
+  final String? reaction;
+  final MessageType? type;
 
   MessageDto(
-      {required this.content, required this.messengerId, required this.type});
+      {this.content, required this.messengerId, this.type, this.reaction});
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
       _$MessageDtoFromJson(json);

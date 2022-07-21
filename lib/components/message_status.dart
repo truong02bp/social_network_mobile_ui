@@ -5,8 +5,7 @@ import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/models/message_interaction.dart';
-
-import '../../../../models/messenger.dart';
+import 'package:social_network_mobile_ui/models/messenger.dart';
 
 class MessageStatus extends StatelessWidget {
   final Message message;

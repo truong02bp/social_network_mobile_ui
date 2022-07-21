@@ -7,12 +7,14 @@ enum ConversationStatus {
   sendMessageSuccess,
   sendMessageFailure,
   loading,
-  receiveMessage
+  receiveMessage,
+  updateSeenSuccess
 }
 
 class ConversationState {
   Conversation? conversation;
   List<Message> messages = [];
+  Message? message;
   bool isActive = false;
   String leave = "";
   String name = "";
@@ -32,6 +34,7 @@ class ConversationState {
     state.messages = this.messages;
     state.page = this.page;
     state.limit = this.limit;
+    state.message = this.message;
     return state;
   }
 }

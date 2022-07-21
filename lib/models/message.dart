@@ -12,7 +12,7 @@ class Message {
   String? content;
   Messenger sender;
   Media? media;
-  List<MessageInteraction>? messageInteractions;
+  List<MessageInteraction>? interactions;
 
   Message(
       {this.content,
@@ -20,7 +20,7 @@ class Message {
       required this.id,
       required this.createdDate,
       this.media,
-      this.messageInteractions});
+      this.interactions});
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);

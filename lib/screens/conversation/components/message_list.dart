@@ -15,14 +15,20 @@ class MessageList extends StatelessWidget {
         bloc.add(GetMessageEvent());
       }
     });
+    Set<int> idsNeedBuild = Set();
 
     return BlocBuilder<ConversationBloc, ConversationState>(
       bloc: bloc,
       buildWhen: (previous, current) =>
           current.status == ConversationStatus.getMessageSuccess ||
-          current.status == ConversationStatus.receiveMessage,
+          current.status == ConversationStatus.receiveMessage ||
+          current.status == ConversationStatus.updateSeenSuccess,
       builder: (context, state) {
         final conversation = state.conversation;
+        if (state.status == ConversationStatus.receiveMessage) {
+          if (state.message!.sender.id == state.conversation!.user.id)
+            idsNeedBuild.add(state.message!.id);
+        }
         return ListView.builder(
             controller: _scrollController,
             addAutomaticKeepAlives: false,
@@ -61,12 +67,29 @@ class MessageList extends StatelessWidget {
                   }
                 }
               }
+
+              if (state.conversation!.user.id == message.sender.id &&
+                  !idsNeedBuild.contains(-1)) {
+                idsNeedBuild.add(message.id);
+                if (message.interactions != null) {
+                  if (message.interactions!.indexWhere((element) =>
+                          element.seenBy.id != state.conversation!.user.id) !=
+                      -1) {
+                    idsNeedBuild.add(-1);
+                  }
+                }
+              } else {
+                idsNeedBuild.add(-1);
+              }
+              bool needMessageStatus = idsNeedBuild.contains(message.id);
+
               return Padding(
                 key: UniqueKey(),
                 padding: const EdgeInsets.only(bottom: 8),
                 child: MessageCard(
                   message: message,
                   conversation: conversation,
+                  needMessageStatus: needMessageStatus,
                   showDate: showDate,
                   showAvatar: showAvatar,
                 ),

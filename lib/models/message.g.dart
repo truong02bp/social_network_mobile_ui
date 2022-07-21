@@ -15,7 +15,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) {
     media: json['media'] == null
         ? null
         : Media.fromJson(json['media'] as Map<String, dynamic>),
-    messageInteractions: (json['messageInteractions'] as List<dynamic>?)
+    interactions: (json['interactions'] as List<dynamic>?)
         ?.map((e) => MessageInteraction.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
@@ -27,6 +27,5 @@ Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'content': instance.content,
       'sender': instance.sender.toJson(),
       'media': instance.media?.toJson(),
-      'messageInteractions':
-          instance.messageInteractions?.map((e) => e.toJson()).toList(),
+      'interactions': instance.interactions?.map((e) => e.toJson()).toList(),
     };

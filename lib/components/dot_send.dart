@@ -8,15 +8,18 @@ class DotSend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 16,
-      width: 16,
+      height: 14,
+      width: 14,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(7),
         color: color,
       ),
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Image.asset("assets/images/dot.png", color: Colors.black, ),
+        child: Image.asset(
+          "assets/images/dot.png",
+          color: Colors.black,
+        ),
       ),
     );
   }

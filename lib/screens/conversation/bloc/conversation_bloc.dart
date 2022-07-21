@@ -19,6 +19,7 @@ part 'conversation_state.dart';
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   StompClient? _stompClient;
   MessageRepository messageRepository = MessageRepository.getInstance();
+  bool isConnected = false;
 
   ConversationBloc() : super(ConversationState()) {
     _onInitialEvent();
@@ -26,11 +27,14 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     _onSendTextMessageEvent();
     _onGetMessageEvent();
     _onReceiveMessageEvent();
+    _onUpdateMessageEvent();
+    _onUpdateSeenMessageEvent();
   }
 
   _onReceiveMessageEvent() {
     on<ReceiveMessageEvent>((event, emit) {
       state.messages.insert(0, event.message);
+      state.message = event.message;
       emit(state.clone(status: ConversationStatus.receiveMessage));
     });
   }
@@ -75,11 +79,29 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
             url: 'ws://$IP:$port/ws-social-network',
             onConnect: (StompFrame frame) {
               _stompClient!.subscribe(
+                  destination: '/topic/update/seen',
+                  callback: (StompFrame frame) {
+                    List<Message> messages = jsonDecode(frame.body!)
+                        .map<Message>((json) => Message.fromJson(json))
+                        .toList();
+                    add(UpdateSeenMessageEvent(messages: messages));
+                  });
+              _stompClient!.subscribe(
+                  destination: '/topic/update/reaction',
+                  callback: (StompFrame frame) {
+                    Message message = Message.fromJson(jsonDecode(frame.body!));
+                    add(UpdateMessageReactionEvent(message: message));
+                  });
+              _stompClient!.subscribe(
                   destination: '/topic/${conversation.id}',
                   callback: (StompFrame frame) {
                     Message message = Message.fromJson(jsonDecode(frame.body!));
                     add(ReceiveMessageEvent(message: message));
                   });
+              add(UpdateMessageEvent(
+                  type: "seen",
+                  messageDto:
+                      MessageDto(messengerId: state.conversation!.user.id)));
             },
             stompConnectHeaders: {'Authorization': '$token'},
             onWebSocketError: (dynamic error) => print(error.toString())),
@@ -104,6 +126,39 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       if (state.isTyping != event.isTyping) {
         state.isTyping = event.isTyping;
         emit(state.clone(status: ConversationStatus.typing));
+      }
+    });
+  }
+
+  _onUpdateMessageEvent() {
+    on<UpdateMessageEvent>((event, emit) async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString("token");
+      final headers = {'Authorization': '$token'};
+      // while (!isConnected) {
+      //   print(isConnected);
+      // }
+
+      if (event.type == "seen")
+        _stompClient!.send(
+            destination: "/social-network/message/update/seen",
+            body: jsonEncode(event.messageDto),
+            headers: headers);
+      else if (event.type == "reaction") {
+        _stompClient!.send(
+            destination: "/social-network/message/update/reaction",
+            body: jsonEncode(event.messageDto),
+            headers: headers);
+      }
+    });
+  }
+
+  _onUpdateSeenMessageEvent() {
+    on<UpdateSeenMessageEvent>((event, emit) async {
+      if (state.messages.isNotEmpty &&
+          state.messages[0].sender.id == state.conversation!.user.id) {
+        state.messages.replaceRange(0, event.messages.length, event.messages);
+        emit(state.clone(status: ConversationStatus.updateSeenSuccess));
       }
     });
   }

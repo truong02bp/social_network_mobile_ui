@@ -8,9 +8,10 @@ part of 'message_dto.dart';
 
 MessageDto _$MessageDtoFromJson(Map<String, dynamic> json) {
   return MessageDto(
-    content: json['content'] as String,
+    content: json['content'] as String?,
     messengerId: json['messengerId'] as int,
-    type: _$enumDecode(_$MessageTypeEnumMap, json['type']),
+    type: _$enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
+    reaction: json['reaction'] as String?,
   );
 }
 
@@ -18,6 +19,7 @@ Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
     <String, dynamic>{
       'content': instance.content,
       'messengerId': instance.messengerId,
+      'reaction': instance.reaction,
       'type': _$MessageTypeEnumMap[instance.type],
     };
 
@@ -45,6 +47,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$MessageTypeEnumMap = {

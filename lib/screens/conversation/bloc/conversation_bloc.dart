@@ -74,9 +74,11 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString("token");
       // connect socket
-      _stompClient = StompClient(
-        config: StompConfig(
+      if (_stompClient == null) {
+        _stompClient = StompClient(
+          config: StompConfig(
             url: 'ws://$IP:$port/ws-social-network',
+            reconnectDelay: Duration(microseconds: 0),
             onConnect: (StompFrame frame) {
               _stompClient!.subscribe(
                   destination: '/topic/update/seen',
@@ -84,7 +86,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
                     List<Message> messages = jsonDecode(frame.body!)
                         .map<Message>((json) => Message.fromJson(json))
                         .toList();
-                    add(UpdateSeenMessageEvent(messages: messages));
+                    if (messages.isNotEmpty) {
+                      add(UpdateSeenMessageEvent(messages: messages));
+                    }
                   });
               _stompClient!.subscribe(
                   destination: '/topic/update/reaction',
@@ -104,8 +108,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
                       MessageDto(messengerId: state.conversation!.user.id)));
             },
             stompConnectHeaders: {'Authorization': '$token'},
-            onWebSocketError: (dynamic error) => print(error.toString())),
-      );
+          ),
+        );
+      }
       _stompClient!.activate();
       state.conversation = conversation;
       state.isActive =

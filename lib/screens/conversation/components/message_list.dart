@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/models/dto/message_dto.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/message_card.dart';
 
@@ -26,8 +27,17 @@ class MessageList extends StatelessWidget {
       builder: (context, state) {
         final conversation = state.conversation;
         if (state.status == ConversationStatus.receiveMessage) {
-          if (state.message!.sender.id == state.conversation!.user.id)
+          if (state.message!.sender.id == state.conversation!.user.id) {
             idsNeedBuild.add(state.message!.id);
+          } else {
+            bloc.add(UpdateMessageEvent(
+                type: "seen",
+                messageDto:
+                    MessageDto(messengerId: state.conversation!.user.id)));
+          }
+        }
+        if (state.status == ConversationStatus.updateSeenSuccess) {
+          idsNeedBuild.clear();
         }
         return ListView.builder(
             controller: _scrollController,

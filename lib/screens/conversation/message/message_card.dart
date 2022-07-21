@@ -87,7 +87,10 @@ class _MessageCardState extends State<MessageCard> {
                       message: widget.message,
                       color: widget.conversation.color,
                     )
-                  : Container(),
+                  : Container(
+                      height: 14,
+                      width: 14,
+                    ),
             ],
           ),
           showDetail

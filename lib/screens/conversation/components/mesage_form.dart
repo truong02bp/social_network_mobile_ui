@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/components/icon_without_background.dart';
+import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
+import 'package:social_network_mobile_ui/screens/gallery/gallery_screen.dart';
 
 class MessageForm extends StatelessWidget {
   final Conversation conversation;
@@ -57,36 +59,32 @@ class MessageForm extends StatelessWidget {
         SizedBox(
           width: 10,
         ),
-        PopupMenuButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconWithoutBackground(
-                      image: "assets/images/camera.png",
-                      width: 40,
-                      height: 40,
-                    ),
-                    SizedBox(
-                      width: 2,
-                    ),
-                    IconWithoutBackground(
-                      image: "assets/images/gallery.png",
-                      width: 40,
-                      height: 40,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-              )
-            ];
+        IconWithoutBackground(
+          image: "assets/images/camera.png",
+          width: 40,
+          height: 40,
+          color: Color(0xfff78379).withOpacity(0.8),
+        ),
+        SizedBox(
+          width: 2,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GalleryScreen(
+                          type: GalleryConstants.image,
+                          option: GalleryConstants.multi,
+                          callBackMulti: (selectedFiles) {},
+                        )));
           },
-          child: Icon(Icons.attach_file,
-              color: Color(0xfff78379).withOpacity(0.8)),
+          child: IconWithoutBackground(
+            image: "assets/images/gallery.png",
+            width: 40,
+            height: 40,
+            color: Color(0xfff78379).withOpacity(0.8),
+          ),
         ),
         SizedBox(
           width: 10,

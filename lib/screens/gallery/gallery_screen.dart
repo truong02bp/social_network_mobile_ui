@@ -22,7 +22,7 @@ class GalleryScreen extends StatelessWidget {
   List<File> medias = [];
   List<File> mediasSelected = [];
   Set<String> sources = Set();
-  String sourceSelected = 'Recent';
+  String sourceSelected = 'All';
   ScrollController _scrollController = ScrollController();
   int page = 0;
   int size = 20;
@@ -38,6 +38,7 @@ class GalleryScreen extends StatelessWidget {
   }
 
   Widget _buildView(BuildContext context) {
+    sources.add(sourceSelected);
     _galleryBloc = BlocProvider.of<GalleryBloc>(context);
     _galleryBloc.add(GalleryGetSources());
     _galleryBloc.add(GalleryGetFromSource(

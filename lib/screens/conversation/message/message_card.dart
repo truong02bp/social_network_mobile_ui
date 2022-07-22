@@ -107,8 +107,8 @@ class _MessageCardState extends State<MessageCard> {
                 child: Stack(children: [
                   Padding(
                     padding: reactionDetails.isNotEmpty
-                        ? EdgeInsets.only(left: 8, right: 6, bottom: 7)
-                        : EdgeInsets.only(left: 8, right: 6),
+                        ? EdgeInsets.only(left: 8, right: 5, bottom: 7)
+                        : EdgeInsets.only(left: 8, right: 5),
                     child: TextCard(
                       text: widget.message.content,
                       color: getColor(widget.conversation.color),

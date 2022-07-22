@@ -30,6 +30,7 @@ class MessageList extends StatelessWidget {
           if (state.message!.sender.id == state.conversation!.user.id) {
             idsNeedBuild.add(state.message!.id);
           } else {
+            idsNeedBuild.clear();
             bloc.add(UpdateMessageEvent(type: "seen"));
           }
         }

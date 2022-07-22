@@ -36,6 +36,7 @@ class _MessageCardState extends State<MessageCard> {
   bool showDetail = false;
   late ConversationBloc bloc;
   Map<String, List<String>> reactionDetails = Map();
+  MessageInteraction? guestInteraction;
 
   @override
   void initState() {
@@ -43,17 +44,17 @@ class _MessageCardState extends State<MessageCard> {
     super.initState();
     bloc = BlocProvider.of<ConversationBloc>(context);
     if (widget.message.interactions != null) {
-      for (MessageInteraction detail in widget.message.interactions!) {
-        // if (detail.seenBy.id != widget.chatBox.currentUser.id) {
-        //   guestMessageDetail = detail;
-        // }
-        if (detail.reaction != null) {
-          String? name = detail.seenBy.nickName;
-          if (name == null) name = detail.seenBy.user.name;
-          if (reactionDetails[detail.reaction!.code] == null) {
-            reactionDetails[detail.reaction!.code] = [];
+      for (MessageInteraction interaction in widget.message.interactions!) {
+        if (interaction.seenBy.id != widget.conversation.user.id) {
+          guestInteraction = interaction;
+        }
+        if (interaction.reaction != null) {
+          String? name = interaction.seenBy.nickName;
+          if (name == null) name = interaction.seenBy.user.name;
+          if (reactionDetails[interaction.reaction!.code] == null) {
+            reactionDetails[interaction.reaction!.code] = [];
           }
-          reactionDetails[detail.reaction!.code]!.add(name);
+          reactionDetails[interaction.reaction!.code]!.add(name);
         }
       }
     }
@@ -147,9 +148,9 @@ class _MessageCardState extends State<MessageCard> {
           showDetail
               ? SeenInfo(
                   isSender: isSender,
-                  interactions: widget.message.interactions,
+                  interaction: guestInteraction,
                 )
-              : Container(),
+              : Container()
         ]);
   }
 

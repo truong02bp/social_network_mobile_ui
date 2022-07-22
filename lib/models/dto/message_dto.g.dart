@@ -12,6 +12,7 @@ MessageDto _$MessageDtoFromJson(Map<String, dynamic> json) {
     messengerId: json['messengerId'] as int,
     type: _$enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
     reaction: json['reaction'] as String?,
+    messageId: json['messageId'] as int?,
   );
 }
 
@@ -19,6 +20,7 @@ Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
     <String, dynamic>{
       'content': instance.content,
       'messengerId': instance.messengerId,
+      'messageId': instance.messageId,
       'reaction': instance.reaction,
       'type': _$MessageTypeEnumMap[instance.type],
     };

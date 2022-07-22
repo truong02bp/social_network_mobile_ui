@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_network_mobile_ui/models/dto/message_dto.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/message_card.dart';
 
@@ -23,17 +22,15 @@ class MessageList extends StatelessWidget {
       buildWhen: (previous, current) =>
           current.status == ConversationStatus.getMessageSuccess ||
           current.status == ConversationStatus.receiveMessage ||
-          current.status == ConversationStatus.updateSeenSuccess,
+          current.status == ConversationStatus.updateSeenSuccess ||
+          current.status == ConversationStatus.updateReactionSuccess,
       builder: (context, state) {
         final conversation = state.conversation;
         if (state.status == ConversationStatus.receiveMessage) {
           if (state.message!.sender.id == state.conversation!.user.id) {
             idsNeedBuild.add(state.message!.id);
           } else {
-            bloc.add(UpdateMessageEvent(
-                type: "seen",
-                messageDto:
-                    MessageDto(messengerId: state.conversation!.user.id)));
+            bloc.add(UpdateMessageEvent(type: "seen"));
           }
         }
         if (state.status == ConversationStatus.updateSeenSuccess) {
@@ -95,7 +92,7 @@ class MessageList extends StatelessWidget {
 
               return Padding(
                 key: UniqueKey(),
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 5),
                 child: MessageCard(
                   message: message,
                   conversation: conversation,

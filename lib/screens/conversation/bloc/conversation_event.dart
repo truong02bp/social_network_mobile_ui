@@ -42,8 +42,9 @@ class UpdateMessageReactionEvent extends ConversationEvent {
 }
 
 class UpdateMessageEvent extends ConversationEvent {
-  final MessageDto messageDto;
   final String type;
+  final String? value;
+  final int? messageId;
 
-  UpdateMessageEvent({required this.messageDto, required this.type});
+  UpdateMessageEvent({required this.type, this.value, this.messageId});
 }

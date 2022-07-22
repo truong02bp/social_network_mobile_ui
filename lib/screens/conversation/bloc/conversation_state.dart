@@ -8,7 +8,8 @@ enum ConversationStatus {
   sendMessageFailure,
   loading,
   receiveMessage,
-  updateSeenSuccess
+  updateSeenSuccess,
+  updateReactionSuccess
 }
 
 class ConversationState {

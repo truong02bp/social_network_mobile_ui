@@ -29,6 +29,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     _onReceiveMessageEvent();
     _onUpdateMessageEvent();
     _onUpdateSeenMessageEvent();
+    _onUpdateReactionEvent();
   }
 
   _onReceiveMessageEvent() {
@@ -102,10 +103,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
                     Message message = Message.fromJson(jsonDecode(frame.body!));
                     add(ReceiveMessageEvent(message: message));
                   });
-              add(UpdateMessageEvent(
-                  type: "seen",
-                  messageDto:
-                      MessageDto(messengerId: state.conversation!.user.id)));
+              add(UpdateMessageEvent(type: "seen"));
             },
             stompConnectHeaders: {'Authorization': '$token'},
           ),
@@ -143,16 +141,20 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       // while (!isConnected) {
       //   print(isConnected);
       // }
-
-      if (event.type == "seen")
+      if (event.type == "seen") {
+        MessageDto dto = MessageDto(messengerId: state.conversation!.user.id);
         _stompClient!.send(
             destination: "/social-network/message/update/seen",
-            body: jsonEncode(event.messageDto),
+            body: jsonEncode(dto),
             headers: headers);
-      else if (event.type == "reaction") {
+      } else if (event.type == "reaction") {
+        MessageDto dto = MessageDto(
+            messengerId: state.conversation!.user.id,
+            reaction: event.value,
+            messageId: event.messageId);
         _stompClient!.send(
             destination: "/social-network/message/update/reaction",
-            body: jsonEncode(event.messageDto),
+            body: jsonEncode(dto),
             headers: headers);
       }
     });
@@ -165,6 +167,19 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         state.messages.replaceRange(0, event.messages.length, event.messages);
         emit(state.clone(status: ConversationStatus.updateSeenSuccess));
       }
+    });
+  }
+
+  _onUpdateReactionEvent() {
+    on<UpdateMessageReactionEvent>((event, emit) {
+      print(event.message.toJson());
+      for (int i = 0; i < state.messages.length; i++) {
+        if (state.messages[i].id == event.message.id) {
+          state.messages.replaceRange(i, i + 1, [event.message]);
+          break;
+        }
+      }
+      emit(state.clone(status: ConversationStatus.updateReactionSuccess));
     });
   }
 

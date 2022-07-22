@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/components/avatar.dart';
 import 'package:social_network_mobile_ui/components/time_bar.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
+import 'package:social_network_mobile_ui/models/message_interaction.dart';
+import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/chat_bubble_triangle.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/message_status.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_bar.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_status.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/seen_info.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/text_card.dart';
 
@@ -29,6 +34,30 @@ class MessageCard extends StatefulWidget {
 
 class _MessageCardState extends State<MessageCard> {
   bool showDetail = false;
+  late ConversationBloc bloc;
+  Map<String, List<String>> reactionDetails = Map();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    bloc = BlocProvider.of<ConversationBloc>(context);
+    if (widget.message.interactions != null) {
+      for (MessageInteraction detail in widget.message.interactions!) {
+        // if (detail.seenBy.id != widget.chatBox.currentUser.id) {
+        //   guestMessageDetail = detail;
+        // }
+        if (detail.reaction != null) {
+          String? name = detail.seenBy.nickName;
+          if (name == null) name = detail.seenBy.user.name;
+          if (reactionDetails[detail.reaction!.code] == null) {
+            reactionDetails[detail.reaction!.code] = [];
+          }
+          reactionDetails[detail.reaction!.code]!.add(name);
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +91,11 @@ class _MessageCardState extends State<MessageCard> {
                       width: 40,
                     ),
               InkWell(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
                 onTap: () {
                   setState(() {
                     showDetail = !showDetail;
@@ -72,14 +105,32 @@ class _MessageCardState extends State<MessageCard> {
                   showReactionBar();
                 },
                 child: Stack(children: [
-                  TextCard(
-                    text: widget.message.content,
-                    color: getColor(widget.conversation.color),
+                  Padding(
+                    padding: reactionDetails.isNotEmpty
+                        ? EdgeInsets.only(left: 8, right: 6, bottom: 7)
+                        : EdgeInsets.only(left: 8, right: 6),
+                    child: TextCard(
+                      text: widget.message.content,
+                      color: getColor(widget.conversation.color),
+                    ),
                   ),
+                  isSender
+                      ? Positioned(
+                          bottom: reactionDetails.isNotEmpty ? 4 : -3,
+                          right: 8,
+                          child: CustomPaint(
+                            painter: ChatBubbleTriangle(
+                                isSender: isSender,
+                                color: getColor(widget.conversation.color)),
+                          ))
+                      : Container(),
+                  reactionDetails.isNotEmpty
+                      ? Positioned(
+                          bottom: -1,
+                          right: 15,
+                          child: ReactionStatus(reactionDetails))
+                      : Container(),
                 ]),
-              ),
-              const SizedBox(
-                width: 2,
               ),
               widget.needMessageStatus
                   ? MessageStatus(
@@ -108,7 +159,10 @@ class _MessageCardState extends State<MessageCard> {
               tag: 'dash',
               child: ReactionBar(
                 callBack: (value) {
-                  print(value);
+                  bloc.add(UpdateMessageEvent(
+                      type: "reaction",
+                      value: value,
+                      messageId: widget.message.id));
                 },
               ),
             ),

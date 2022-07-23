@@ -116,6 +116,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           await PhotoManager.getAssetPathList(type: RequestType.common);
       List<String> sources = paths.map((e) => e.name).toList();
       state.sources.addAll(sources);
+      emit(state.clone(GalleryStatus.initial));
       add(GalleryGetFromSource());
     });
   }

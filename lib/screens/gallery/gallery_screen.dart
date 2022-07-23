@@ -10,7 +10,7 @@ import 'bloc/gallery_bloc.dart';
 class GalleryScreen extends StatelessWidget {
   final String type;
   final String option;
-  final Function(List<File> files)? callBackMulti;
+  final Function(Set<File> files)? callBackMulti;
   final Function(File file)? callBackSingle;
 
   GalleryScreen(
@@ -75,14 +75,30 @@ class GalleryScreen extends StatelessWidget {
                     },
                   ),
                   Spacer(),
-                  option == GalleryConstants.multi
-                      ? InkWell(
-                          onTap: () {},
-                          child: SizedBox(
-                              height: 30,
-                              width: 40,
-                              child: Center(child: Text('Send'))))
-                      : Container(),
+                  BlocBuilder<GalleryBloc, GalleryState>(
+                      bloc: _galleryBloc,
+                      buildWhen: (previous, current) =>
+                          current.status == GalleryStatus.initial,
+                      builder: (context, state) {
+                        if (option == GalleryConstants.multi) {
+                          return InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                if (callBackMulti != null) {
+                                  callBackMulti!(state.mediasSelected);
+                                }
+                              },
+                              child: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: Center(
+                                      child: Icon(
+                                    Icons.send,
+                                    color: Colors.blue.withOpacity(0.9),
+                                  ))));
+                        }
+                        return Container();
+                      }),
                   const SizedBox(
                     width: 20,
                   )

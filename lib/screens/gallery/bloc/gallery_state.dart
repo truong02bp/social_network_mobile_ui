@@ -1,22 +1,33 @@
 part of 'gallery_bloc.dart';
 
-@immutable
-abstract class GalleryState {}
-
-class GalleryInitial extends GalleryState {}
-
-class Loading extends GalleryState {
-
+enum GalleryStatus {
+  initial,
+  getFromSourceSuccess,
+  getSourcesSuccess,
+  loading,
+  selectFileSuccess
 }
 
-class GalleryGetFromSourceSuccess extends GalleryState {
-  List<File> medias;
+class GalleryState {
+  Set<String> sources = Set();
+  List<File> medias = [];
+  Set<File> mediasSelected = Set();
+  String sourceSelected = 'All';
+  String type = 'image';
+  GalleryStatus status = GalleryStatus.initial;
+  int page = 0;
+  int size = 20;
 
-  GalleryGetFromSourceSuccess({required this.medias});
-}
-
-class GalleryGetSourcesSuccess extends GalleryState {
-  List<String> sources;
-
-  GalleryGetSourcesSuccess({required this.sources});
+  GalleryState clone(GalleryStatus status) {
+    GalleryState state = GalleryState();
+    state.medias = this.medias;
+    state.sourceSelected = this.sourceSelected;
+    state.sources = this.sources;
+    state.mediasSelected = this.mediasSelected;
+    state.page = this.page;
+    state.size = this.size;
+    state.status = status;
+    state.type = this.type;
+    return state;
+  }
 }

@@ -19,18 +19,12 @@ class GalleryScreen extends StatelessWidget {
       this.callBackSingle});
 
   late GalleryBloc _galleryBloc;
-  List<File> medias = [];
-  List<File> mediasSelected = [];
-  Set<String> sources = Set();
-  String sourceSelected = 'All';
   ScrollController _scrollController = ScrollController();
-  int page = 0;
-  int size = 20;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GalleryBloc(),
+      create: (context) => GalleryBloc()..add(GalleryInitialEvent(type: type)),
       child: Builder(
         builder: (context) => _buildView(context),
       ),
@@ -38,17 +32,11 @@ class GalleryScreen extends StatelessWidget {
   }
 
   Widget _buildView(BuildContext context) {
-    sources.add(sourceSelected);
     _galleryBloc = BlocProvider.of<GalleryBloc>(context);
-    _galleryBloc.add(GalleryGetSources());
-    _galleryBloc.add(GalleryGetFromSource(
-        page: 0, size: size, type: type, source: sourceSelected));
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        _galleryBloc.add(GalleryGetFromSource(
-            page: page + 1, size: size, type: type, source: sourceSelected));
-        page += 1;
+        _galleryBloc.add(GalleryGetFromSource());
       }
     });
     return Scaffold(
@@ -69,30 +57,33 @@ class GalleryScreen extends StatelessWidget {
                   SizedBox(
                     width: 20,
                   ),
-                  BlocBuilder(
+                  BlocBuilder<GalleryBloc, GalleryState>(
                     bloc: _galleryBloc,
                     builder: (BuildContext context, state) {
-                      if (state is GalleryGetSourcesSuccess) {
-                        sources.addAll(state.sources);
-                      }
                       return DropdownButton(
-                        value: sourceSelected,
+                        value: state.sourceSelected,
                         onChanged: (value) {
-                          sourceSelected = value as String;
-                          page = 0;
-                          medias.clear();
-                          _galleryBloc.add(GalleryGetFromSource(
-                              page: 0,
-                              size: size,
-                              type: type,
-                              source: sourceSelected));
+                          _galleryBloc.add(UpdateSourceSelected(
+                              sourceSelected: value as String));
                         },
-                        items: sources
+                        items: state.sources
                             .map((source) => DropdownMenuItem(
                                 value: source, child: Text('$source')))
                             .toList(),
                       );
                     },
+                  ),
+                  Spacer(),
+                  option == GalleryConstants.multi
+                      ? InkWell(
+                          onTap: () {},
+                          child: SizedBox(
+                              height: 30,
+                              width: 40,
+                              child: Center(child: Text('Send'))))
+                      : Container(),
+                  const SizedBox(
+                    width: 20,
                   )
                 ],
               ),
@@ -100,14 +91,12 @@ class GalleryScreen extends StatelessWidget {
                 height: 20,
               ),
               Expanded(
-                child: BlocBuilder(
+                child: BlocBuilder<GalleryBloc, GalleryState>(
                   bloc: _galleryBloc,
                   buildWhen: (previous, current) =>
-                      current is GalleryGetFromSourceSuccess,
+                      current.status == GalleryStatus.getFromSourceSuccess ||
+                      current.status == GalleryStatus.selectFileSuccess,
                   builder: (BuildContext context, state) {
-                    if (state is GalleryGetFromSourceSuccess) {
-                      medias.addAll(state.medias);
-                    }
                     return Container(
                       child: GridView.builder(
                           controller: _scrollController,
@@ -115,20 +104,54 @@ class GalleryScreen extends StatelessWidget {
                               SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3),
                           shrinkWrap: true,
-                          itemCount: medias.length,
+                          itemCount: state.medias.length,
                           itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                process(medias[index], context);
-                              },
-                              child: Container(
-                                key: ValueKey(medias[index].path),
-                                margin: EdgeInsets.only(left: 3, bottom: 3),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: FileImage(medias[index]),
-                                        fit: BoxFit.cover)),
-                              ),
+                            final media = state.medias[index];
+                            bool isSelected =
+                                state.mediasSelected.contains(media);
+                            return Stack(
+                              children: [
+                                InkWell(
+                                  key: ValueKey(media.path),
+                                  onTap: () {
+                                    if (option == GalleryConstants.single) {
+                                      processSingle(media, context);
+                                    } else {
+                                      _galleryBloc
+                                          .add(SelectFileEvent(file: media));
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 3, bottom: 3),
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: FileImage(media),
+                                            fit: BoxFit.cover)),
+                                  ),
+                                ),
+                                state.mediasSelected.isNotEmpty && isSelected
+                                    ? Positioned(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              border: Border.all(
+                                                  width: 2, color: Colors.grey),
+                                              color: Colors.white),
+                                          height: 30,
+                                          width: 30,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ),
+                                        top: 5,
+                                        right: 5,
+                                      )
+                                    : Container(),
+                              ],
                             );
                           }),
                     );
@@ -138,10 +161,10 @@ class GalleryScreen extends StatelessWidget {
               SizedBox(
                 height: 5,
               ),
-              BlocBuilder(
+              BlocBuilder<GalleryBloc, GalleryState>(
                   bloc: _galleryBloc,
                   builder: (context, state) {
-                    if (state is Loading) {
+                    if (state.status == GalleryStatus.loading) {
                       return CircularProgressIndicator();
                     }
                     return Container();
@@ -153,13 +176,8 @@ class GalleryScreen extends StatelessWidget {
     );
   }
 
-  void process(File file, BuildContext context) {
-    if (option == 'single') {
-      mediasSelected = [file];
-      callBackSingle!(mediasSelected[0]);
-    } else if (option == 'multi') {
-      callBackMulti!(mediasSelected);
-    }
+  void processSingle(File file, BuildContext context) {
+    callBackSingle!(file);
     Navigator.pop(context);
   }
 }

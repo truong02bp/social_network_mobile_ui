@@ -8,18 +8,40 @@ part 'gallery_event.dart';
 part 'gallery_state.dart';
 
 class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
-  GalleryBloc() : super(GalleryInitial()) {
-    on<GalleryGetSources>((event, emit) async {
-      List<AssetPathEntity> paths =
-          await PhotoManager.getAssetPathList(type: RequestType.common);
-      List<String> sources = paths.map((e) => e.name).toList();
-      emit(GalleryGetSourcesSuccess(sources: sources));
-    });
+  GalleryBloc() : super(GalleryState()) {
+    _onInitialEvent();
+    _onGetFromSourceEvent();
+    _onUpdateSelectedSourceEvent();
+    _onSelectFileEvent();
+  }
 
+  _onSelectFileEvent() {
+    on<SelectFileEvent>((event, emit) {
+      if (state.mediasSelected.contains(event.file)) {
+        state.mediasSelected.remove(event.file);
+      } else {
+        state.mediasSelected.add(event.file);
+      }
+      emit(state.clone(GalleryStatus.selectFileSuccess));
+    });
+  }
+
+  _onUpdateSelectedSourceEvent() {
+    on<UpdateSourceSelected>((event, emit) {
+      state.sourceSelected = event.sourceSelected;
+      state.page = 0;
+      state.medias.clear();
+      state.mediasSelected.clear();
+      add(GalleryGetFromSource());
+    });
+  }
+
+  _onGetFromSourceEvent() {
     on<GalleryGetFromSource>((event, emit) async {
-      emit(Loading());
+      emit(state.clone(GalleryStatus.loading));
+
       List<AssetPathEntity> paths = [];
-      switch (event.type) {
+      switch (state.type) {
         case 'image':
           paths = await PhotoManager.getAssetPathList(type: RequestType.image);
           break;
@@ -27,15 +49,17 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           paths = await PhotoManager.getAssetPathList(type: RequestType.video);
           break;
         case 'all':
-          paths = await PhotoManager.getAssetPathList(type: RequestType.video);
+          paths = await PhotoManager.getAssetPathList(type: RequestType.common);
           break;
       }
-
-      if (event.source == 'All') {
+      int page = state.page;
+      int size = state.size;
+      String source = state.sourceSelected;
+      if (source == 'All') {
         List<File> images = [];
         for (AssetPathEntity path in paths) {
           List<AssetEntity> assets =
-              await path.getAssetListPaged(page: event.page, size: event.size);
+              await path.getAssetListPaged(page: page, size: size);
           for (AssetEntity asset in assets) {
             File? image = await asset.file;
             if (image != null) {
@@ -43,12 +67,13 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
             }
           }
         }
-        emit(GalleryGetFromSourceSuccess(medias: images));
+        state.medias.addAll(images);
+        emit(state.clone(GalleryStatus.getFromSourceSuccess));
       } else {
         for (AssetPathEntity path in paths) {
-          if (path.name == event.source) {
-            List<AssetEntity> assets = await path.getAssetListPaged(
-                page: event.page, size: event.size);
+          if (path.name == source) {
+            List<AssetEntity> assets =
+                await path.getAssetListPaged(page: page, size: size);
             List<File> images = [];
             for (AssetEntity asset in assets) {
               File? image = await asset.file;
@@ -56,11 +81,26 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
                 images.add(image);
               }
             }
-            emit(GalleryGetFromSourceSuccess(medias: images));
+            state.medias.addAll(images);
+            emit(state.clone(GalleryStatus.getFromSourceSuccess));
             break;
           }
         }
       }
+      state.page++;
+    });
+  }
+
+  _onInitialEvent() {
+    on<GalleryInitialEvent>((event, emit) async {
+      state.sources.add(state.sourceSelected);
+      state.page = 0;
+      state.type = event.type;
+      List<AssetPathEntity> paths =
+          await PhotoManager.getAssetPathList(type: RequestType.common);
+      List<String> sources = paths.map((e) => e.name).toList();
+      state.sources.addAll(sources);
+      add(GalleryGetFromSource());
     });
   }
 }

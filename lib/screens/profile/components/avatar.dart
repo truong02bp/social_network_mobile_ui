@@ -44,7 +44,7 @@ class Avatar extends StatelessWidget {
                           )));
             },
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(size! / 2),
+              borderRadius: BorderRadius.circular(size / 2),
               child: CachedNetworkImage(
                 height: size,
                 width: size,

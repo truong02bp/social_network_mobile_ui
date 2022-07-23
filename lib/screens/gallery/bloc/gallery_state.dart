@@ -5,13 +5,16 @@ enum GalleryStatus {
   getFromSourceSuccess,
   getSourcesSuccess,
   loading,
-  selectFileSuccess
+  selectFileSuccess,
+  previewFileSuccess,
+  stopPreviewFileSuccess
 }
 
 class GalleryState {
   Set<String> sources = Set();
   List<File> medias = [];
   Set<File> mediasSelected = Set();
+  File? previewFile;
   String sourceSelected = 'All';
   String type = 'image';
   GalleryStatus status = GalleryStatus.initial;
@@ -28,6 +31,7 @@ class GalleryState {
     state.size = this.size;
     state.status = status;
     state.type = this.type;
+    state.previewFile = this.previewFile;
     return state;
   }
 }

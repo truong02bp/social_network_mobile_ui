@@ -23,4 +23,12 @@ class SelectFileEvent extends GalleryEvent {
   SelectFileEvent({required this.file});
 }
 
+class PreviewFileEvent extends GalleryEvent {
+  final File file;
+
+  PreviewFileEvent({required this.file});
+}
+
+class StopPreviewFileEvent extends GalleryEvent {}
+
 class GalleryGetSources extends GalleryEvent {}

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,8 +98,8 @@ class GalleryScreen extends StatelessWidget {
                       current.status == GalleryStatus.getFromSourceSuccess ||
                       current.status == GalleryStatus.selectFileSuccess,
                   builder: (BuildContext context, state) {
-                    return Container(
-                      child: GridView.builder(
+                    return Stack(children: [
+                      GridView.builder(
                           controller: _scrollController,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
@@ -120,6 +121,10 @@ class GalleryScreen extends StatelessWidget {
                                       _galleryBloc
                                           .add(SelectFileEvent(file: media));
                                     }
+                                  },
+                                  onLongPress: () {
+                                    _galleryBloc
+                                        .add(PreviewFileEvent(file: media));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(left: 3, bottom: 3),
@@ -154,7 +159,76 @@ class GalleryScreen extends StatelessWidget {
                               ],
                             );
                           }),
-                    );
+                      BlocBuilder<GalleryBloc, GalleryState>(
+                          bloc: _galleryBloc,
+                          buildWhen: (previous, current) =>
+                              current.status ==
+                                  GalleryStatus.previewFileSuccess ||
+                              current.status ==
+                                  GalleryStatus.stopPreviewFileSuccess,
+                          builder: (context, state) {
+                            if (state.status ==
+                                GalleryStatus.previewFileSuccess) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 5.0,
+                                      sigmaY: 5.0,
+                                    ),
+                                    child: Container(
+                                      color: Colors.white.withOpacity(0.6),
+                                    ),
+                                  ),
+                                  Stack(children: [
+                                    Container(
+                                      child: Center(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                left: 3, bottom: 3),
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: FileImage(
+                                                        state.previewFile!),
+                                                    fit: BoxFit.cover)),
+                                            height: 350,
+                                            width: 350,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      child: InkWell(
+                                        onTap: () {
+                                          _galleryBloc
+                                              .add(StopPreviewFileEvent());
+                                        },
+                                        child: Container(
+                                          child: Icon(
+                                            Icons.remove,
+                                            color: Colors.white,
+                                            size: 30,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                        ),
+                                      ),
+                                      right: 45,
+                                      top: 10,
+                                    ),
+                                  ]),
+                                ],
+                              );
+                            }
+                            return Container();
+                          }),
+                    ]);
                   },
                 ),
               ),

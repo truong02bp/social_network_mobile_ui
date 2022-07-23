@@ -13,6 +13,22 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     _onGetFromSourceEvent();
     _onUpdateSelectedSourceEvent();
     _onSelectFileEvent();
+    _onPreviewFileEvent();
+    _onStopPreviewFileEvent();
+  }
+
+  _onStopPreviewFileEvent() {
+    on<StopPreviewFileEvent>((event, emit) {
+      state.previewFile = null;
+      emit(state.clone(GalleryStatus.stopPreviewFileSuccess));
+    });
+  }
+
+  _onPreviewFileEvent() {
+    on<PreviewFileEvent>((event, emit) {
+      state.previewFile = event.file;
+      emit(state.clone(GalleryStatus.previewFileSuccess));
+    });
   }
 
   _onSelectFileEvent() {

@@ -90,10 +90,9 @@ class MessageList extends StatelessWidget {
                 idsNeedBuild.add(-1);
               }
               bool needMessageStatus = idsNeedBuild.contains(message.id);
-
               return Padding(
                 key: UniqueKey(),
-                padding: const EdgeInsets.only(bottom: 5),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: MessageCard(
                   message: message,
                   conversation: conversation,

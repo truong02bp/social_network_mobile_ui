@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
+import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
 import 'package:social_network_mobile_ui/models/dto/message_dto.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
+import 'package:social_network_mobile_ui/models/message_media.dart';
+import 'package:social_network_mobile_ui/repositories/message_media_repository.dart';
 import 'package:social_network_mobile_ui/repositories/message_repository.dart';
 import 'package:social_network_mobile_ui/ultils/time_ultil.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -19,6 +23,8 @@ part 'conversation_state.dart';
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   StompClient? _stompClient;
   MessageRepository messageRepository = MessageRepository.getInstance();
+  MessageMediaRepository messageMediaRepository =
+      MessageMediaRepository.getInstance();
   bool isConnected = false;
 
   ConversationBloc() : super(ConversationState()) {
@@ -30,6 +36,38 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     _onUpdateMessageEvent();
     _onUpdateSeenMessageEvent();
     _onUpdateReactionEvent();
+    _onSendImageMessageEvent();
+  }
+
+  _onSendImageMessageEvent() {
+    on<SendImageMessageEvent>((event, emit) async {
+      if (event.images.length > 10) {
+        emit(state.clone(status: ConversationStatus.sendImageMessageFailure));
+      } else {
+        emit(state.clone(status: ConversationStatus.sendImageMessageLoading));
+        List<MediaDto> dtos = [];
+        for (File file in event.images) {
+          List<int> bytes = await file.readAsBytes();
+          dtos.add(MediaDto(
+              name: file.path.substring(file.path.lastIndexOf("/") + 1),
+              bytes: base64Encode(bytes)));
+        }
+        if (dtos.isNotEmpty) {
+          List<MessageMedia> medias =
+              await messageMediaRepository.createAll(dtos: dtos);
+          MessageDto imageMessage = MessageDto(
+              messengerId: state.conversation!.user.id,
+              messageMediaIds: medias.map((e) => e.id).toList(),
+              type: MessageType.IMAGE);
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          String? token = preferences.getString("token");
+          _stompClient!.send(
+              destination: "/social-network/message/send",
+              body: jsonEncode(imageMessage),
+              headers: {'Authorization': token!});
+        }
+      }
+    });
   }
 
   _onReceiveMessageEvent() {
@@ -138,9 +176,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString("token");
       final headers = {'Authorization': '$token'};
-      // while (!isConnected) {
-      //   print(isConnected);
-      // }
       if (event.type == "seen") {
         MessageDto dto = MessageDto(messengerId: state.conversation!.user.id);
         _stompClient!.send(
@@ -172,7 +207,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
 
   _onUpdateReactionEvent() {
     on<UpdateMessageReactionEvent>((event, emit) {
-      print(event.message.toJson());
       for (int i = 0; i < state.messages.length; i++) {
         if (state.messages[i].id == event.message.id) {
           state.messages.replaceRange(i, i + 1, [event.message]);

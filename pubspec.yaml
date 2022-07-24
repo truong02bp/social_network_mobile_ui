@@ -45,6 +45,7 @@ dependencies:
   awesome_dialog: ^2.2.1
   equatable: ^2.0.3
   stomp_dart_client: ^0.4.3
+  photo_view: ^0.14.0
 #  image_editor_pro: ^1.1.8
 #  video_trimmer: ^1.1.0
 

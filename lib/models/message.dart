@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:social_network_mobile_ui/models/media.dart';
+import 'package:social_network_mobile_ui/models/dto/message_dto.dart';
 import 'package:social_network_mobile_ui/models/message_interaction.dart';
+import 'package:social_network_mobile_ui/models/message_media.dart';
 import 'package:social_network_mobile_ui/models/messenger.dart';
 
 part 'message.g.dart';
@@ -11,7 +12,8 @@ class Message {
   DateTime createdDate;
   String? content;
   Messenger sender;
-  Media? media;
+  MessageType type;
+  List<MessageMedia>? medias;
   List<MessageInteraction>? interactions;
 
   Message(
@@ -19,7 +21,8 @@ class Message {
       required this.sender,
       required this.id,
       required this.createdDate,
-      this.media,
+      required this.type,
+      this.medias,
       this.interactions});
 
   factory Message.fromJson(Map<String, dynamic> json) =>

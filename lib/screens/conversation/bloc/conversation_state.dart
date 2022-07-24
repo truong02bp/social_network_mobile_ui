@@ -9,7 +9,10 @@ enum ConversationStatus {
   loading,
   receiveMessage,
   updateSeenSuccess,
-  updateReactionSuccess
+  updateReactionSuccess,
+  sendImageMessageSuccess,
+  sendImageMessageFailure,
+  sendImageMessageLoading
 }
 
 class ConversationState {

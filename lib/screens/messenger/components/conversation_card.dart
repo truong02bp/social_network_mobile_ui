@@ -24,10 +24,8 @@ class ConversationCard extends StatelessWidget {
       if (lastMessage.interactions != null) {
         interactions.addAll(lastMessage.interactions!);
       }
-      print(interactions.length);
       interactions
           .removeWhere((detail) => detail.seenBy.id == lastMessage.sender.id);
-      print(interactions.length);
       if (lastMessage.sender.id == conversation.user.id) {
         isSeen = false;
       }
@@ -84,12 +82,12 @@ class ConversationCard extends StatelessWidget {
     } else {
       content.write("you: ");
     }
-    if (message.media != null) {
-      if (message.media!.contentType == "sticker") {
+    if (message.medias != null && message.medias!.isNotEmpty) {
+      if (message.medias![0].contentType == "sticker") {
         content.write("send a sticker");
-      } else if (fileContentType.contains(message.media!.contentType)) {
+      } else if (fileContentType.contains(message.medias![0].contentType)) {
         content.write("send a file");
-      } else if (imageContentType.contains(message.media!.contentType)) {
+      } else if (imageContentType.contains(message.medias![0].contentType)) {
         content.write("send a photo");
       } else {
         content.write("send a video");

@@ -86,6 +86,7 @@ class GalleryScreen extends StatelessWidget {
                               onTap: () {
                                 if (callBackMulti != null) {
                                   callBackMulti!(state.mediasSelected);
+                                  Navigator.pop(context);
                                 }
                               },
                               child: SizedBox(

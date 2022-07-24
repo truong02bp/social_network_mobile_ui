@@ -76,7 +76,10 @@ class MessageForm extends StatelessWidget {
                     builder: (context) => GalleryScreen(
                           type: GalleryConstants.image,
                           option: GalleryConstants.multi,
-                          callBackMulti: (selectedFiles) {},
+                          callBackMulti: (selectedFiles) {
+                            bloc.add(
+                                SendImageMessageEvent(images: selectedFiles));
+                          },
                         )));
           },
           child: IconWithoutBackground(

@@ -4,10 +4,12 @@ import 'package:social_network_mobile_ui/components/avatar.dart';
 import 'package:social_network_mobile_ui/components/time_bar.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
+import 'package:social_network_mobile_ui/models/dto/message_dto.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/models/message_interaction.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/chat_bubble_triangle.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/image_card.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/message_status.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_bar.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_status.dart';
@@ -43,6 +45,18 @@ class _MessageCardState extends State<MessageCard> {
     // TODO: implement initState
     super.initState();
     bloc = BlocProvider.of<ConversationBloc>(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(builder: (context) => _buildView(context));
+  }
+
+  Widget _buildView(BuildContext context) {
+    bool isSender = widget.message.sender.id == widget.conversation.user.id;
+    final messenger = widget.message.sender;
+    Map<String, List<String>> reactionDetails = Map();
+    MessageInteraction? guestInteraction;
     if (widget.message.interactions != null) {
       for (MessageInteraction interaction in widget.message.interactions!) {
         if (interaction.seenBy.id != widget.conversation.user.id) {
@@ -58,16 +72,6 @@ class _MessageCardState extends State<MessageCard> {
         }
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Builder(builder: (context) => _buildView(context));
-  }
-
-  Widget _buildView(BuildContext context) {
-    bool isSender = widget.message.sender.id == widget.conversation.user.id;
-    final messenger = widget.message.sender;
     return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,10 +114,7 @@ class _MessageCardState extends State<MessageCard> {
                     padding: reactionDetails.isNotEmpty
                         ? EdgeInsets.only(left: 8, right: 5, bottom: 7)
                         : EdgeInsets.only(left: 8, right: 5),
-                    child: TextCard(
-                      text: widget.message.content,
-                      color: getColor(widget.conversation.color),
-                    ),
+                    child: _buildMessageCard(context),
                   ),
                   isSender
                       ? Positioned(
@@ -127,10 +128,13 @@ class _MessageCardState extends State<MessageCard> {
                       : Container(),
                   reactionDetails.isNotEmpty
                       ? Positioned(
-                          bottom: -1,
-                          right: 15,
+                          key: UniqueKey(),
+                          bottom: 0,
+                          right: 12,
                           child: ReactionStatus(reactionDetails))
-                      : Container(),
+                      : Container(
+                          key: UniqueKey(),
+                        ),
                 ]),
               ),
               widget.needMessageStatus
@@ -152,6 +156,22 @@ class _MessageCardState extends State<MessageCard> {
                 )
               : Container()
         ]);
+  }
+
+  Widget _buildMessageCard(BuildContext context) {
+    switch (widget.message.type) {
+      case MessageType.IMAGE:
+        return ImageCard(message: widget.message);
+      case MessageType.TEXT:
+        return TextCard(
+          text: widget.message.content,
+          color: getColor(widget.conversation.color),
+        );
+      case MessageType.VIDEO:
+        // TODO: Handle this case.
+        break;
+    }
+    return Container();
   }
 
   void showReactionBar() {

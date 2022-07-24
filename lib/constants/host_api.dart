@@ -14,3 +14,4 @@ final authenticateUrl = host + "/api/$version/authenticate";
 // messenger service
 final conversationUrl = host + "/api/$version/conversation";
 final messageUrl = host + "/api/$version/message";
+final messageMediaUrl = host + "/api/$version/message/media";

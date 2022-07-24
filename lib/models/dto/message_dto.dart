@@ -13,12 +13,14 @@ class MessageDto {
   final int? messageId;
   String? reaction;
   final MessageType? type;
+  final List<int>? messageMediaIds;
 
   MessageDto(
       {this.content,
       required this.messengerId,
       this.type,
       this.reaction,
+      this.messageMediaIds,
       this.messageId});
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>

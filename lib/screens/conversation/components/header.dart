@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/components/conversation_avatar.dart';
@@ -24,7 +25,7 @@ class Header extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          width: 15,
+          width: 30,
         ),
         ConversationAvatar(
           conversation: conversation,
@@ -67,6 +68,7 @@ class Header extends StatelessWidget {
         ),
         Spacer(),
         PopupMenuButton(
+          color: AppColor.black2,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           itemBuilder: (context) {
@@ -76,37 +78,40 @@ class Header extends StatelessWidget {
                   value: 'call',
                   icon: Icon(
                     Icons.phone,
-                    color: Colors.black,
+                    color: Colors.white,
                   )),
               buildItem(
                   text: 'Video call',
                   value: 'video_call',
                   icon: Icon(
                     Icons.videocam_rounded,
-                    color: Colors.black,
+                    color: Colors.white,
                   )),
               buildItem(
                   text: 'Search',
                   value: 'search',
-                  icon: Icon(Icons.search, color: Colors.black)),
+                  icon: Icon(Icons.search, color: Colors.white)),
               buildItem(
-                  text: 'Clear history',
-                  value: 'clear_history',
-                  icon: Icon(Icons.cleaning_services_outlined,
-                      color: Colors.black)),
+                  text: 'Nick name',
+                  value: 'nick_name',
+                  icon: Icon(Icons.drive_file_rename_outline_rounded,
+                      color: Colors.white)),
+              buildItem(
+                  text: 'Media share',
+                  value: 'media share',
+                  icon: Icon(Icons.perm_media, color: Colors.white)),
               buildItem(
                   text: 'Mute notifications',
                   value: 'mute_notification',
-                  icon: Icon(Icons.volume_mute, color: Colors.black)),
-              buildItem(
-                  text: 'Delete chat',
-                  value: 'delete_chat',
-                  icon: Icon(Icons.delete, color: Colors.black)),
+                  icon: Icon(Icons.volume_mute, color: Colors.white)),
             ];
           },
           onSelected: (value) {
             if (value == "video_call") {}
           },
+        ),
+        SizedBox(
+          width: 10,
         )
       ],
     );

@@ -15,10 +15,21 @@ class MessageMediaRepository {
     return _messageMediaRepository;
   }
 
+  Future<MessageMedia> create({required MediaDto dto}) async {
+    String url = messageMediaUrl;
+    ApiModel apiModel = new ApiModel(
+      url: url,
+      body: dto,
+      parse: (json) => MessageMedia.fromJson(json),
+    );
+    MessageMedia media = await apiRepository.post(apiModel);
+    return media;
+  }
+
   Future<List<MessageMedia>> createAll({required List<MediaDto> dtos}) async {
     String url = messageMediaUrl;
     ApiModel apiModel = new ApiModel(
-        url: url,
+        url: url + "/all",
         body: dtos,
         parse: (data) {
           return data

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_network_mobile_ui/constants/content_type.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/dto/media_dto.dart';
@@ -40,27 +41,50 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   }
 
   _onSendImageMessageEvent() {
-    on<SendImageMessageEvent>((event, emit) async {
-      if (event.images.length > 10) {
+    on<SendMediaMessageEvent>((event, emit) async {
+      if (event.medias.length > 10) {
         emit(state.clone(status: ConversationStatus.sendImageMessageFailure));
       } else {
         emit(state.clone(status: ConversationStatus.sendImageMessageLoading));
-        List<MediaDto> dtos = [];
-        for (File file in event.images) {
+        List<MediaDto> images = [];
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        String? token = preferences.getString("token");
+        for (File file in event.medias) {
           List<int> bytes = await file.readAsBytes();
-          dtos.add(MediaDto(
+          final contentType =
+              file.path.substring(file.path.lastIndexOf(".") + 1);
+          bool isVideo = videoContentType.contains(contentType);
+          MediaDto mediaDto = MediaDto(
               name: file.path.substring(file.path.lastIndexOf("/") + 1),
-              bytes: base64Encode(bytes)));
+              bytes: base64Encode(bytes));
+          if (isVideo) {
+            int sizeInBytes = file.lengthSync();
+            double sizeInMb = sizeInBytes / (1024 * 1024);
+            if (sizeInMb <= 25) {
+              MessageMedia media =
+                  await messageMediaRepository.create(dto: mediaDto);
+              MessageDto imageMessage = MessageDto(
+                  messengerId: state.conversation!.user.id,
+                  messageMediaIds: [media.id],
+                  type: MessageType.MEDIA);
+              _stompClient!.send(
+                  destination: "/social-network/message/send",
+                  body: jsonEncode(imageMessage),
+                  headers: {'Authorization': token!});
+            } else {
+              emit(state.clone(status: ConversationStatus.videoSizeInvalid));
+            }
+          } else {
+            images.add(mediaDto);
+          }
         }
-        if (dtos.isNotEmpty) {
+        if (images.isNotEmpty) {
           List<MessageMedia> medias =
-              await messageMediaRepository.createAll(dtos: dtos);
+              await messageMediaRepository.createAll(dtos: images);
           MessageDto imageMessage = MessageDto(
               messengerId: state.conversation!.user.id,
               messageMediaIds: medias.map((e) => e.id).toList(),
               type: MessageType.MEDIA);
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          String? token = preferences.getString("token");
           _stompClient!.send(
               destination: "/social-network/message/send",
               body: jsonEncode(imageMessage),

@@ -21,10 +21,10 @@ class SendTextMessageEvent extends ConversationEvent {
   SendTextMessageEvent({required this.content});
 }
 
-class SendImageMessageEvent extends ConversationEvent {
-  final Set<File> images;
+class SendMediaMessageEvent extends ConversationEvent {
+  final Set<File> medias;
 
-  SendImageMessageEvent({required this.images});
+  SendMediaMessageEvent({required this.medias});
 }
 
 class ReceiveMessageEvent extends ConversationEvent {

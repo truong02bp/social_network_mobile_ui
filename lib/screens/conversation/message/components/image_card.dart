@@ -22,7 +22,7 @@ class ImageCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: Hero(
-          tag: 'image-card-${image.url}',
+          tag: 'image-card-${image.id}',
           child: Container(
             margin: EdgeInsets.only(left: 3, bottom: 3),
             decoration: BoxDecoration(

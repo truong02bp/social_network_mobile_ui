@@ -78,7 +78,7 @@ class MessageForm extends StatelessWidget {
                           option: GalleryConstants.multi,
                           callBackMulti: (selectedFiles) {
                             bloc.add(
-                                SendImageMessageEvent(images: selectedFiles));
+                                SendMediaMessageEvent(medias: selectedFiles));
                           },
                         )));
           },

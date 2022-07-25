@@ -12,7 +12,8 @@ enum ConversationStatus {
   updateReactionSuccess,
   sendImageMessageSuccess,
   sendImageMessageFailure,
-  sendImageMessageLoading
+  sendImageMessageLoading,
+  videoSizeInvalid
 }
 
 class ConversationState {

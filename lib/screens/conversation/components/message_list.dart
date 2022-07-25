@@ -34,7 +34,8 @@ class MessageList extends StatelessWidget {
             bloc.add(UpdateMessageEvent(type: "seen"));
           }
         }
-        if (state.status == ConversationStatus.updateSeenSuccess) {
+        if (state.status == ConversationStatus.updateSeenSuccess &&
+            state.message!.sender.id == state.conversation!.user.id) {
           idsNeedBuild.clear();
         }
         return ListView.builder(

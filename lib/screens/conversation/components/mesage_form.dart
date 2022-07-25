@@ -74,7 +74,7 @@ class MessageForm extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => GalleryScreen(
-                          type: GalleryConstants.image,
+                          type: GalleryConstants.all,
                           option: GalleryConstants.multi,
                           callBackMulti: (selectedFiles) {
                             bloc.add(

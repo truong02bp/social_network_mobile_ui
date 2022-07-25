@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'message_dto.g.dart';
 
-enum MessageType { TEXT, IMAGE, VIDEO }
+enum MessageType { TEXT, MEDIA }
 
 @JsonSerializable(
   explicitToJson: true,

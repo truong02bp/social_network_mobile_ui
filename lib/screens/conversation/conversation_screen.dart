@@ -20,6 +20,8 @@ class ConversationScreen extends StatelessWidget {
   }
 
   Widget _buildView(BuildContext context) {
+    final bloc = BlocProvider.of<ConversationBloc>(context);
+    print(bloc);
     return Scaffold(
       body: SafeArea(
         child: Padding(

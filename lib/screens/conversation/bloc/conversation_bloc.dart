@@ -58,7 +58,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           MessageDto imageMessage = MessageDto(
               messengerId: state.conversation!.user.id,
               messageMediaIds: medias.map((e) => e.id).toList(),
-              type: MessageType.IMAGE);
+              type: MessageType.MEDIA);
           SharedPreferences preferences = await SharedPreferences.getInstance();
           String? token = preferences.getString("token");
           _stompClient!.send(

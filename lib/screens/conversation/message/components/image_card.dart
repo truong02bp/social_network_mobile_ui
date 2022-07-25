@@ -3,41 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
-import 'package:social_network_mobile_ui/models/message.dart';
-import 'package:social_network_mobile_ui/models/message_media.dart';
+import 'package:social_network_mobile_ui/models/media.dart';
 
 class ImageCard extends StatelessWidget {
-  final Message message;
+  final Media image;
 
-  ImageCard({required this.message});
+  ImageCard(this.image);
 
   @override
   Widget build(BuildContext context) {
-    final images = [];
-    if (message.medias != null) {
-      images.addAll(message.medias!);
-    }
-    return Container(
-      constraints: new BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 4 / 7),
-      padding: EdgeInsets.only(
-        top: 10,
-      ),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: images.length == 1 ? 1 : 2),
-        shrinkWrap: true,
-        itemCount: images.length,
-        itemBuilder: (context, index) {
-          final image = images[index];
-          return _buildImageCard(image: image, context: context);
-        },
-      ),
-    );
-  }
-
-  Widget _buildImageCard(
-      {required MessageMedia image, required BuildContext context}) {
     return InkWell(
       onTap: () {
         Navigator.push(

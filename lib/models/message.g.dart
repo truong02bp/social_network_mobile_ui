@@ -60,6 +60,5 @@ K _$enumDecode<K, V>(
 
 const _$MessageTypeEnumMap = {
   MessageType.TEXT: 'TEXT',
-  MessageType.IMAGE: 'IMAGE',
-  MessageType.VIDEO: 'VIDEO',
+  MessageType.MEDIA: 'MEDIA',
 };

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
+import 'package:social_network_mobile_ui/screens/gallery/components/media_card.dart';
 
 import 'bloc/gallery_bloc.dart';
 
@@ -62,6 +63,7 @@ class GalleryScreen extends StatelessWidget {
                     bloc: _galleryBloc,
                     builder: (BuildContext context, state) {
                       return DropdownButton(
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                         value: state.sourceSelected,
                         onChanged: (value) {
                           _galleryBloc.add(UpdateSourceSelected(
@@ -130,27 +132,20 @@ class GalleryScreen extends StatelessWidget {
                             return Stack(
                               children: [
                                 InkWell(
-                                  key: ValueKey(media.path),
-                                  onTap: () {
-                                    if (option == GalleryConstants.single) {
-                                      processSingle(media, context);
-                                    } else {
+                                    key: ValueKey(media.path),
+                                    onTap: () {
+                                      if (option == GalleryConstants.single) {
+                                        processSingle(media, context);
+                                      } else {
+                                        _galleryBloc
+                                            .add(SelectFileEvent(file: media));
+                                      }
+                                    },
+                                    onLongPress: () {
                                       _galleryBloc
-                                          .add(SelectFileEvent(file: media));
-                                    }
-                                  },
-                                  onLongPress: () {
-                                    _galleryBloc
-                                        .add(PreviewFileEvent(file: media));
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 3, bottom: 3),
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: FileImage(media),
-                                            fit: BoxFit.cover)),
-                                  ),
-                                ),
+                                          .add(PreviewFileEvent(file: media));
+                                    },
+                                    child: MediaCard(media)),
                                 state.mediasSelected.isNotEmpty && isSelected
                                     ? Positioned(
                                         child: Container(
@@ -205,16 +200,10 @@ class GalleryScreen extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(10.0),
                                           child: Container(
-                                            margin: EdgeInsets.only(
-                                                left: 3, bottom: 3),
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: FileImage(
-                                                        state.previewFile!),
-                                                    fit: BoxFit.cover)),
-                                            height: 350,
-                                            width: 350,
-                                          ),
+                                              height: 350,
+                                              width: 350,
+                                              child: MediaCard(
+                                                  state.previewFile!)),
                                         ),
                                       ),
                                     ),

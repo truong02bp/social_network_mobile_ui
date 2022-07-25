@@ -68,6 +68,5 @@ K? _$enumDecodeNullable<K, V>(
 
 const _$MessageTypeEnumMap = {
   MessageType.TEXT: 'TEXT',
-  MessageType.IMAGE: 'IMAGE',
-  MessageType.VIDEO: 'VIDEO',
+  MessageType.MEDIA: 'MEDIA',
 };

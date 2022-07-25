@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/constants/content_type.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
 import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/models/message_interaction.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/conversation/conversation_screen.dart';
+import 'package:social_network_mobile_ui/screens/messenger/bloc/messenger_bloc.dart';
 
 import '../../../constants/host_api.dart';
 
@@ -17,6 +19,7 @@ class ConversationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User user = conversation.guests[0].user;
+    final bloc = BlocProvider.of<MessengerBloc>(context);
     bool isSeen = false;
     Message? lastMessage = conversation.lastMessage;
     if (lastMessage != null) {
@@ -53,7 +56,10 @@ class ConversationCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ConversationScreen(conversation: conversation)));
+                    ConversationScreen(conversation: conversation))).then(
+            (value) => {
+                  bloc.add(MessengerInitialEvent(user: conversation.user.user))
+                });
       },
       title: Text(
         '${user.name}',

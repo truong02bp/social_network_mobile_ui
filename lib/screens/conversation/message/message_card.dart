@@ -9,7 +9,7 @@ import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/models/message_interaction.dart';
 import 'package:social_network_mobile_ui/screens/conversation/bloc/conversation_bloc.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/chat_bubble_triangle.dart';
-import 'package:social_network_mobile_ui/screens/conversation/message/components/image_card.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/media_message_card.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/message_status.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_bar.dart';
 import 'package:social_network_mobile_ui/screens/conversation/message/components/reaction_status.dart';
@@ -160,16 +160,13 @@ class _MessageCardState extends State<MessageCard> {
 
   Widget _buildMessageCard(BuildContext context) {
     switch (widget.message.type) {
-      case MessageType.IMAGE:
-        return ImageCard(message: widget.message);
+      case MessageType.MEDIA:
+        return MediaMessageCard(message: widget.message);
       case MessageType.TEXT:
         return TextCard(
           text: widget.message.content,
           color: getColor(widget.conversation.color),
         );
-      case MessageType.VIDEO:
-        // TODO: Handle this case.
-        break;
     }
     return Container();
   }

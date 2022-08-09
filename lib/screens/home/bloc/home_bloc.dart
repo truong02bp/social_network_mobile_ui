@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
@@ -10,11 +9,12 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   UserRepository userRepository = UserRepository.getInstance();
 
-  HomeBloc() : super(HomeInitial()) {
+  HomeBloc() : super(HomeState()) {
     on<FetchDataHomeEvent>((event, emit) async {
       User? user = await userRepository.getUserLogin();
       if (user != null) {
-        emit(FetchDataHomeState(user: user));
+        state.user = user;
+        emit(state.clone(HomeStatus.fetchDataSuccess));
       }
     });
   }

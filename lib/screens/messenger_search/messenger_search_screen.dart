@@ -4,7 +4,6 @@ import 'package:social_network_mobile_ui/components/back_icon.dart';
 
 import 'bloc/messenger_search_bloc.dart';
 import 'bloc/messenger_search_event.dart';
-import 'bloc/messenger_search_state.dart';
 
 class MessengerSearchScreen extends StatelessWidget {
   @override

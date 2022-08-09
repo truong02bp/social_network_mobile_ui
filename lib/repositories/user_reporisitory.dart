@@ -21,6 +21,7 @@ class UserRepository {
     ApiModel model = ApiModel(
         url: authenticateUrl,
         body: AuthenticationRequest(email: email, password: password));
+    model.isLogin = true;
     String token = await apiRepository.post(model);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", token);

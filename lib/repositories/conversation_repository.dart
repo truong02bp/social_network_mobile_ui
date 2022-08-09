@@ -1,7 +1,6 @@
 import 'package:social_network_mobile_ui/constants/host_api.dart';
 import 'package:social_network_mobile_ui/models/api_model.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
-import 'package:social_network_mobile_ui/models/message.dart';
 import 'package:social_network_mobile_ui/repositories/api_repository.dart';
 
 class ConversationRepository {

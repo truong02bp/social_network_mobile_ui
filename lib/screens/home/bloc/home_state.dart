@@ -1,12 +1,15 @@
 part of 'home_bloc.dart';
 
-@immutable
-abstract class HomeState {}
+enum HomeStatus { initial, fetchDataSuccess }
 
-class HomeInitial extends HomeState {}
+class HomeState {
+  HomeStatus status = HomeStatus.initial;
+  User? user;
 
-class FetchDataHomeState extends HomeState {
-  final User user;
-
-  FetchDataHomeState({required this.user});
+  HomeState clone(HomeStatus status) {
+    HomeState state = HomeState();
+    state.status = status;
+    state.user = this.user;
+    return state;
+  }
 }

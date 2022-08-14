@@ -3,7 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/constants/content_type.dart';
 import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
+import 'package:social_network_mobile_ui/screens/conversation/message/components/video_card.dart';
 import 'package:social_network_mobile_ui/screens/gallery/components/media_card.dart';
 
 import 'bloc/gallery_bloc.dart';
@@ -13,12 +15,14 @@ class GalleryScreen extends StatelessWidget {
   final String option;
   final Function(Set<File> files)? callBackMulti;
   final Function(File file)? callBackSingle;
+  bool previewMedia;
 
   GalleryScreen(
       {this.type = GalleryConstants.all,
       this.option = GalleryConstants.single,
       this.callBackMulti,
-      this.callBackSingle});
+      this.callBackSingle,
+      this.previewMedia = false});
 
   late GalleryBloc _galleryBloc;
   ScrollController _scrollController = ScrollController();
@@ -26,7 +30,8 @@ class GalleryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GalleryBloc()..add(GalleryInitialEvent(type: type)),
+      create: (context) => GalleryBloc()
+        ..add(GalleryInitialEvent(type: type, previewMedia: previewMedia)),
       child: Builder(
         builder: (context) => _buildView(context),
       ),
@@ -110,6 +115,55 @@ class GalleryScreen extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
+              BlocBuilder<GalleryBloc, GalleryState>(
+                  bloc: _galleryBloc,
+                  buildWhen: (previous, current) =>
+                      previewMedia &&
+                      (current.status == GalleryStatus.selectFileSuccess ||
+                          current.status == GalleryStatus.initial),
+                  builder: (context, state) {
+                    final file = state.previewMediaFile;
+                    if (file == null) {
+                      return Container();
+                    }
+                    final contentType =
+                        file.path.substring(file.path.lastIndexOf(".") + 1);
+                    if (videoContentType.contains(contentType)) {
+                      return Column(
+                        children: [
+                          VideoCard(
+                            file: file,
+                          ),
+                          Container(
+                            height: 5,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.3)),
+                          )
+                        ],
+                      );
+                    }
+                    return Column(
+                      children: [
+                        GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 1),
+                          shrinkWrap: true,
+                          itemCount: 1,
+                          itemBuilder: (context, index) {
+                            return MediaCard(
+                              media: file,
+                            );
+                          },
+                        ),
+                        Container(
+                          height: 5,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3)),
+                        )
+                      ],
+                    );
+                  }),
               Expanded(
                 child: BlocBuilder<GalleryBloc, GalleryState>(
                   bloc: _galleryBloc,
@@ -145,7 +199,7 @@ class GalleryScreen extends StatelessWidget {
                                       _galleryBloc
                                           .add(PreviewFileEvent(file: media));
                                     },
-                                    child: MediaCard(media)),
+                                    child: MediaCard(media: media)),
                                 state.mediasSelected.isNotEmpty && isSelected
                                     ? Positioned(
                                         child: Container(
@@ -174,8 +228,9 @@ class GalleryScreen extends StatelessWidget {
                       BlocBuilder<GalleryBloc, GalleryState>(
                           bloc: _galleryBloc,
                           buildWhen: (previous, current) =>
-                              current.status ==
-                                  GalleryStatus.previewFileSuccess ||
+                              !previewMedia &&
+                                  current.status ==
+                                      GalleryStatus.previewFileSuccess ||
                               current.status ==
                                   GalleryStatus.stopPreviewFileSuccess,
                           builder: (context, state) {
@@ -203,7 +258,7 @@ class GalleryScreen extends StatelessWidget {
                                               height: 350,
                                               width: 350,
                                               child: MediaCard(
-                                                  state.previewFile!)),
+                                                  media: state.previewFile!)),
                                         ),
                                       ),
                                     ),

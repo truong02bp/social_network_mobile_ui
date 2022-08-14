@@ -45,5 +45,8 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>In order to access your photo library</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Used to demonstrate image picker plugin</string>
+
 </dict>
 </plist>

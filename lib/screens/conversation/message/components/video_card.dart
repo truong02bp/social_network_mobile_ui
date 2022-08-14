@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_mobile_ui/constants/host_api.dart';
@@ -5,9 +7,10 @@ import 'package:social_network_mobile_ui/models/media.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoCard extends StatefulWidget {
-  final Media video;
+  final Media? video;
+  final File? file;
 
-  VideoCard({required this.video});
+  VideoCard({this.video, this.file});
 
   @override
   State<VideoCard> createState() => _VideoCardState();
@@ -25,7 +28,12 @@ class _VideoCardState extends State<VideoCard> {
   }
 
   Future<void> initVideo() async {
-    _controller = VideoPlayerController.network(minioHost + widget.video.url);
+    if (widget.file != null) {
+      _controller = VideoPlayerController.file(widget.file!);
+    } else {
+      _controller =
+          VideoPlayerController.network(minioHost + widget.video!.url);
+    }
     await _controller.initialize();
     chewieController = ChewieController(
       videoPlayerController: _controller,

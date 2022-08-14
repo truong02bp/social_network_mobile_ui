@@ -23,8 +23,7 @@ class ApiRepository {
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
-      log("${model.url} ${exception.toString()}");
-      return null;
+      throw Exception("${model.url} ${exception.toString()}");
     }
   }
 
@@ -45,8 +44,7 @@ class ApiRepository {
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
-      log("${model.url} ${exception.toString()}");
-      return null;
+      throw Exception("${model.url} ${exception.toString()}");
     }
   }
 
@@ -67,8 +65,7 @@ class ApiRepository {
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
-      log("${model.url} ${exception.toString()}");
-      return null;
+      throw Exception("${model.url} ${exception.toString()}");
     }
   }
 
@@ -88,8 +85,7 @@ class ApiRepository {
           headers: model.headers);
       return parseResponse(res: res, model: model);
     } catch (exception) {
-      log("${model.url} ${exception.toString()}");
-      return null;
+      throw Exception("${model.url} ${exception.toString()}");
     }
   }
 

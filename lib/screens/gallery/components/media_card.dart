@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart';
 class MediaCard extends StatefulWidget {
   final File media;
 
-  MediaCard(this.media);
+  MediaCard({required this.media});
 
   @override
   State<MediaCard> createState() => _MediaCardState();

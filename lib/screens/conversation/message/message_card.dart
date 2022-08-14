@@ -168,7 +168,6 @@ class _MessageCardState extends State<MessageCard> {
           color: getColor(widget.conversation.color),
         );
     }
-    return Container();
   }
 
   void showReactionBar() {

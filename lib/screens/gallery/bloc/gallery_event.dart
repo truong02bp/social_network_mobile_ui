@@ -5,8 +5,9 @@ abstract class GalleryEvent {}
 
 class GalleryInitialEvent extends GalleryEvent {
   String type;
+  bool previewMedia;
 
-  GalleryInitialEvent({required this.type});
+  GalleryInitialEvent({required this.type, required this.previewMedia});
 }
 
 class GalleryGetFromSource extends GalleryEvent {}

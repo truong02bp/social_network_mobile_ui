@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_mobile_ui/constants/color.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/profile/bloc/profile_bloc.dart';
-import 'package:social_network_mobile_ui/screens/profile/components/gallery.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/header.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/profile.dart';
 import 'package:social_network_mobile_ui/screens/profile/components/profile_drawer.dart';
@@ -49,27 +48,61 @@ class ProfileScreen extends StatelessWidget {
               body: SafeArea(
                 child: Padding(
                     padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Profile(
-                          user: user,
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        ProfileEdit(user!),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        StoryHighlights(),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Expanded(child: Gallery())
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Profile(
+                            user: user,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          ProfileEdit(user!),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          StoryHighlights(),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       flex: 1,
+                          //       child: Container(
+                          //         height: 40,
+                          //         padding: EdgeInsets.all(7),
+                          //         child: SvgPicture.asset(
+                          //           "assets/svgs/grid.svg",
+                          //           height: 20,
+                          //           width: 20,
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Expanded(
+                          //       flex: 1,
+                          //       child: Container(
+                          //         height: 40,
+                          //         padding: EdgeInsets.all(7),
+                          //         child: SvgPicture.asset(
+                          //           "assets/svgs/personal.svg",
+                          //           height: 25,
+                          //           width: 25,
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // ),
+                          // Container(
+                          //   height: 1000,
+                          // )
+                        ],
+                      ),
                     )),
               ),
             );

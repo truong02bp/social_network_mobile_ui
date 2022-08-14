@@ -15,8 +15,10 @@ class GalleryState {
   List<File> medias = [];
   Set<File> mediasSelected = Set();
   File? previewFile;
+  File? previewMediaFile;
   String sourceSelected = 'All';
   String type = 'image';
+  bool previewMedia = false;
   GalleryStatus status = GalleryStatus.initial;
   int page = 0;
   int size = 20;
@@ -32,6 +34,8 @@ class GalleryState {
     state.status = status;
     state.type = this.type;
     state.previewFile = this.previewFile;
+    state.previewMedia = this.previewMedia;
+    state.previewMediaFile = this.previewMediaFile;
     return state;
   }
 }

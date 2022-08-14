@@ -36,6 +36,9 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       if (state.mediasSelected.contains(event.file)) {
         state.mediasSelected.remove(event.file);
       } else {
+        if (state.previewMedia) {
+          state.previewMediaFile = event.file;
+        }
         state.mediasSelected.add(event.file);
       }
       emit(state.clone(GalleryStatus.selectFileSuccess));
@@ -104,11 +107,16 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
         }
       }
       state.page++;
+      if (state.previewMediaFile == null && state.previewMedia) {
+        state.previewMediaFile = state.medias[0];
+        emit(state.clone(GalleryStatus.initial));
+      }
     });
   }
 
   _onInitialEvent() {
     on<GalleryInitialEvent>((event, emit) async {
+      state.previewMedia = event.previewMedia;
       state.sources.add(state.sourceSelected);
       state.page = 0;
       state.type = event.type;

@@ -28,7 +28,6 @@ class Conversations extends StatelessWidget {
                 current.status == MessengerStatus.getConversationSuccess ||
                 current.status == MessengerStatus.receiveMessage,
             builder: (context, state) {
-              print(state.status);
               return ListView.builder(
                   controller: _scrollController,
                   itemCount: state.conversations.length,

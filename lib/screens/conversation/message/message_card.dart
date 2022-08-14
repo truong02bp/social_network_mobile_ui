@@ -52,6 +52,12 @@ class _MessageCardState extends State<MessageCard> {
     return Builder(builder: (context) => _buildView(context));
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    reactionDetails.clear();
+  }
+
   Widget _buildView(BuildContext context) {
     bool isSender = widget.message.sender.id == widget.conversation.user.id;
     final messenger = widget.message.sender;

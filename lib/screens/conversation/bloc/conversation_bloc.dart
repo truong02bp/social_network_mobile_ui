@@ -237,6 +237,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           break;
         }
       }
+      state.messageUpdateId = event.message.id;
       emit(state.clone(status: ConversationStatus.updateReactionSuccess));
     });
   }

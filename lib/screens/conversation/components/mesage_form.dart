@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_mobile_ui/components/camera_icon.dart';
 import 'package:social_network_mobile_ui/components/icon_without_background.dart';
 import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
 import 'package:social_network_mobile_ui/models/conversation.dart';
@@ -59,12 +62,10 @@ class MessageForm extends StatelessWidget {
         SizedBox(
           width: 10,
         ),
-        IconWithoutBackground(
-          image: "assets/images/camera.png",
-          width: 40,
-          height: 40,
-          color: Color(0xfff78379).withOpacity(0.8),
-        ),
+        CameraIcon(solvePicked: (file, type) {
+          File media = File(file.path);
+          bloc.add(SendMediaMessageEvent(medias: {media}));
+        }),
         SizedBox(
           width: 2,
         ),

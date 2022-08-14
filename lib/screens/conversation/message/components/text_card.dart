@@ -8,6 +8,7 @@ class TextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('text rebuild');
     return Container(
       constraints: new BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 2 / 3),

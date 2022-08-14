@@ -12,6 +12,7 @@ class ImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('image rebuild');
     return InkWell(
       onTap: () {
         Navigator.push(

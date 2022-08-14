@@ -79,4 +79,14 @@ class _VideoCardState extends State<VideoCard> {
       },
     );
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if (chewieController != null) {
+      chewieController!.dispose();
+    }
+    _controller.dispose();
+  }
 }

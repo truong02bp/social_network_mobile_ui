@@ -40,11 +40,11 @@ class MessageList extends StatelessWidget {
         }
         return ListView.builder(
             controller: _scrollController,
-            addAutomaticKeepAlives: false,
-            shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemCount: state.messages.length,
             reverse: true,
+            addAutomaticKeepAlives: false,
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               final message = state.messages[index];
               // calculate show date
@@ -91,8 +91,22 @@ class MessageList extends StatelessWidget {
                 idsNeedBuild.add(-1);
               }
               bool needMessageStatus = idsNeedBuild.contains(message.id);
+              if (state.messageUpdateId == message.id) {
+                print(message.id);
+                return Padding(
+                  key: UniqueKey(),
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: MessageCard(
+                    message: message,
+                    conversation: conversation,
+                    needMessageStatus: needMessageStatus,
+                    showDate: showDate,
+                    showAvatar: showAvatar,
+                  ),
+                );
+              }
               return Padding(
-                key: UniqueKey(),
+                key: ValueKey(message.id),
                 padding: const EdgeInsets.only(bottom: 10),
                 child: MessageCard(
                   message: message,

@@ -26,6 +26,7 @@ class ConversationState {
   bool isTyping = false;
   int page = 0;
   int limit = 20;
+  int messageUpdateId = -1;
   ConversationStatus status = ConversationStatus.initial;
 
   ConversationState clone({required ConversationStatus status}) {
@@ -40,6 +41,7 @@ class ConversationState {
     state.page = this.page;
     state.limit = this.limit;
     state.message = this.message;
+    state.messageUpdateId = this.messageUpdateId;
     return state;
   }
 }

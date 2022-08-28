@@ -5,6 +5,7 @@ import 'package:social_network_mobile_ui/constants/gallery_constant.dart';
 import 'package:social_network_mobile_ui/models/user.dart';
 import 'package:social_network_mobile_ui/screens/gallery/gallery_screen.dart';
 import 'package:social_network_mobile_ui/screens/messenger/messenger_screen.dart';
+import 'package:social_network_mobile_ui/screens/post_creation/post_creation.dart';
 
 class Header extends StatelessWidget {
   final User user;
@@ -16,11 +17,12 @@ class Header extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          'Instagram',
+          'PTIT network',
           style: TextStyle(
-              fontSize: 25,
+              fontSize: 24,
               fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.bold),
+              color: Colors.grey,
+              fontWeight: FontWeight.w700),
         ),
         const Spacer(),
         Container(
@@ -50,7 +52,17 @@ class Header extends StatelessWidget {
                                         previewMedia: true,
                                         option: GalleryConstants.multi,
                                         callBackMulti: (files) {
-                                          print('callback');
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PostCreationScreen(
+                                                            user: user,
+                                                            files: files
+                                                                .toList())));
+                                          });
                                         },
                                       )));
                         });

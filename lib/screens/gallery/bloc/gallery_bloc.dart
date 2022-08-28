@@ -107,7 +107,9 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
         }
       }
       state.page++;
-      if (state.previewMediaFile == null && state.previewMedia) {
+      if (state.previewMediaFile == null &&
+          state.previewMedia &&
+          state.medias.isNotEmpty) {
         state.previewMediaFile = state.medias[0];
         emit(state.clone(GalleryStatus.initial));
       }
